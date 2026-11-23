@@ -328,7 +328,9 @@
         theme: 'dark',
         energyMode: 'full', // 'full' | 'busy' | 'floor'
         privacyBlur: false,
-        pinCode: '1234',
+                pinCode: '1234',
+        lastActiveDate: new Date().toISOString().slice(0, 10),
+        autoMidnightReset: true,
         // Daily ('today') for Schedule/Daily tab; 7-Day Weekly ('7d') for remaining percentage tabs
         tabMetricMode: {
           deen: '7d',
@@ -710,6 +712,7 @@
       const qiblaSvg = document.getElementById('headerQiblaSvg');
       const gpsDot = document.getElementById('gpsStatusDot');
 
+            checkAndApplyAutoMidnightReset();
       if (clockEl) {
         clockEl.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       }
@@ -754,6 +757,9 @@
         <button onclick="lockAppNow()" title="4-Digit PIN Vault Lock" class="w-7 h-7 rounded-full bg-slate-200/70 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-xs">ðŸ”’</button>
         <button onclick="toggleThemeMode()" title="Toggle Dark/Light Theme" class="w-7 h-7 rounded-full bg-slate-200/70 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-xs">
           ${state.theme === 'dark' ? 'â˜€ï¸' : 'ðŸŒ™'}
+        </button>
+                <button onclick="openBottomSheet('reset_hub')" title="Reset Counts, Scores & Skills" class="h-7 px-2 rounded-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-[10.5px] font-black flex items-center gap-1 transition">
+          🔄 <span>Reset</span>
         </button>
         <button onclick="openBottomSheet('settings')" class="h-7 px-2.5 rounded-full bg-[#D6B66B] hover:bg-[#e1c47d] text-slate-950 text-[10.5px] font-black flex items-center gap-1 shadow-sm">
           âš™ï¸ <span>Settings</span>
@@ -1838,7 +1844,11 @@
             </div>
           </div>`
           : `<div class="text-xs text-slate-400">All flashcards reviewed!</div>`;
-            } else if (sheetName === 'terms_legal') {
+                  } else if (sheetName === 'reset_hub') {
+        titleEl.textContent = '🔄 Master Reset Hub & Skill Calibration';
+        subEl.textContent = 'Reset daily counts, calibrate skill momentum percentages, or clear all progress to start fresh';
+        bodyEl.innerHTML = renderResetHubSheetHtml();
+      } else if (sheetName === 'terms_legal') {
         titleEl.textContent = '📜 Terms of Service, Legal Protection & Privacy Policy';
         subEl.textContent = 'Enterprise Liability Shields, Anti-Abuse Safeguards & Data Sovereign Privacy (Google/Meta Standard)';
         bodyEl.innerHTML = `
@@ -3051,6 +3061,247 @@
         }
       };
       reader.readAsText(file);
+    }
+
+    // =========================================================================
+    // MASTER RESET ENGINE: AUTO & MANUAL SKILL CALIBRATION
+    // =========================================================================
+    function checkAndApplyAutoMidnightReset() {
+      const todayStr = new Date().toISOString().slice(0, 10);
+      if (!state.lastActiveDate) {
+        state.lastActiveDate = todayStr;
+        saveState();
+        return;
+      }
+      if (state.lastActiveDate !== todayStr) {
+        if (state.autoMidnightReset !== false) {
+          performDailyReset(true);
+        }
+        state.lastActiveDate = todayStr;
+        saveState();
+      }
+    }
+
+    function toggleAutoMidnightReset() {
+      state.autoMidnightReset = !state.autoMidnightReset;
+      saveState();
+      if (activeSheetName === 'reset_hub') renderBottomSheetContent('reset_hub');
+      showToast(state.autoMidnightReset ? 'Auto Midnight Reset: ENABLED ✓' : 'Auto Midnight Reset: DISABLED', 'RESET');
+    }
+
+    function performDailyReset(silent = false) {
+      // 1. Reset Prayers
+      ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].forEach((p) => {
+        if (state.prayersToday[p]) {
+          state.prayersToday[p].done = false;
+          state.prayersToday[p].floor = false;
+        }
+      });
+      // 2. Reset Deen Habits logged minutes
+      state.deenHabits.forEach((h) => {
+        h.loggedMin = 0;
+        h.floor = false;
+      });
+      // 3. Reset Development
+      state.development.breathSessionsToday = 0;
+      state.development.items.forEach((i) => {
+        i.loggedMin = 0;
+        i.floor = false;
+      });
+      // 4. Reset Grooming logged minutes
+      state.grooming.traits.forEach((t) => {
+        t.loggedMin = 0;
+        t.floor = false;
+      });
+      // 5. Reset AI Focus
+      state.aiFocus.loggedTodayMin = 0;
+      state.aiFocus.floorToday = false;
+      // 6. Reset Schedule Blocks & Wins
+      state.schedule.blocks.forEach((b) => { b.done = false; });
+      state.schedule.top3Wins.forEach((w) => { w.done = false; });
+      state.schedule.timerRunning = false;
+      state.schedule.timerRemainingSec = state.schedule.timerTotalSec || 1800;
+      if (studyTimerInterval) {
+        clearInterval(studyTimerInterval);
+        studyTimerInterval = null;
+      }
+      // 7. Reset Masnoon Duas daily checks
+      state.masnoonDuas.forEach((d) => { d.doneToday = false; });
+
+      saveState();
+      renderNavigation();
+      renderAtAGlanceBanner();
+      renderActiveTab();
+      if (activeSheetName === 'reset_hub') renderBottomSheetContent('reset_hub');
+      if (!silent) {
+        playChime(528, 0.25);
+        pulseHaptic(40);
+        showToast('All Daily Counts & Logs Reset to 0 ✓', 'RESET');
+      }
+    }
+
+    function resetCategorySkills(catKey) {
+      if (catKey === 'deen') {
+        ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].forEach((p) => {
+          if (state.prayersToday[p]) { state.prayersToday[p].done = false; state.prayersToday[p].floor = false; }
+        });
+        state.deenHabits.forEach((h) => { h.loggedMin = 0; h.floor = false; h.weekEarned = 0; });
+        showToast('Deen & Salah Progress Reset to 0% ✓', 'RESET');
+      } else if (catKey === 'develop') {
+        state.development.breathSessionsToday = 0;
+        state.development.items.forEach((i) => { i.loggedMin = 0; i.floor = false; i.weekEarned = 0; });
+        showToast('Personal Development Reset to 0% ✓', 'RESET');
+      } else if (catKey === 'grooming') {
+        state.grooming.traits.forEach((t) => { t.score = 0; t.loggedMin = 0; t.floor = false; t.weekEarned = 0; });
+        showToast('Personality Grooming Scores Reset to 0% ✓', 'RESET');
+      } else if (catKey === 'ai_focus') {
+        state.aiFocus.loggedTodayMin = 0;
+        state.aiFocus.floorToday = false;
+        state.aiFocus.weeklyEarnedDays = 0;
+        showToast('Single-Skill Mastery Progress Reset to 0% ✓', 'RESET');
+      } else if (catKey === 'schedule') {
+        state.schedule.blocks.forEach((b) => { b.done = false; });
+        state.schedule.top3Wins.forEach((w) => { w.done = false; });
+        showToast('Time & Study Timer Reset to 0% ✓', 'RESET');
+      } else if (catKey === 'overview') {
+        state.prayerHistory30 = state.prayerHistory30.map(() => 0);
+        showToast('30-Day Consistency Heatmap Reset ✓', 'RESET');
+      }
+      saveState();
+      renderNavigation();
+      renderAtAGlanceBanner();
+      renderActiveTab();
+      if (activeSheetName === 'reset_hub') renderBottomSheetContent('reset_hub');
+      playChime(440, 0.2);
+    }
+
+    function manuallySetTraitScore(traitId, newScore) {
+      const val = Math.max(0, Math.min(100, parseInt(newScore, 10) || 0));
+      const tr = state.grooming.traits.find((x) => x.id === traitId);
+      if (tr) {
+        tr.score = val;
+        saveState();
+        renderNavigation();
+        renderAtAGlanceBanner();
+        renderActiveTab();
+        if (activeSheetName === 'reset_hub') renderBottomSheetContent('reset_hub');
+        showToast(`${tr.name} manually set to ${val}% ✓`, 'CALIBRATE');
+      }
+    }
+
+    function manuallySetDeenHabitEarned(idx, days) {
+      const val = Math.max(0, Math.min(7, parseInt(days, 10) || 0));
+      if (state.deenHabits[idx]) {
+        state.deenHabits[idx].weekEarned = val;
+        saveState();
+        renderNavigation();
+        renderAtAGlanceBanner();
+        renderActiveTab();
+        if (activeSheetName === 'reset_hub') renderBottomSheetContent('reset_hub');
+        showToast(`Habit progress updated to ${val} days ✓`, 'CALIBRATE');
+      }
+    }
+
+    function renderResetHubSheetHtml() {
+      return `
+        <div class="space-y-4 max-h-[75vh] overflow-y-auto pr-1 text-xs">
+          <!-- Quick Action Buttons -->
+          <div class="p-4 rounded-3xl bg-slate-50 dark:bg-oled border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-black text-xs uppercase tracking-wide text-rose-400">⚡ Master Instant Actions</span>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[11px] text-slate-400">Auto Midnight Reset:</span>
+                <button onclick="toggleAutoMidnightReset()" class="px-2.5 py-1 rounded-xl text-[10.5px] font-black transition ${
+                  state.autoMidnightReset !== false
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                    : 'bg-slate-700 text-slate-400'
+                }">
+                  ${state.autoMidnightReset !== false ? 'ON (Active) ✓' : 'OFF (Manual)'}
+                </button>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+              <button onclick="performDailyReset()" class="p-3 rounded-2xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 text-left transition space-y-0.5">
+                <div class="font-black text-xs">🌅 Reset Daily Counts (Start Today Fresh)</div>
+                <div class="text-[10px] text-slate-400">Clears today's logged minutes, prayers, timers &amp; tasks to 0. Keeps 7D targets &amp; history intact.</div>
+              </button>
+              <button onclick="if(confirm('Are you sure you want to completely reset ALL pillars, scores, and history back to 0%?')){ resetAllSkillsToZero(); }" class="p-3 rounded-2xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 text-left transition space-y-0.5">
+                <div class="font-black text-xs">🗑️ Complete Fresh Start (All to 0%)</div>
+                <div class="text-[10px] text-slate-400">Resets all 6 pillars, skill scores, habit streaks &amp; heatmaps to 0% without deleting custom names.</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Per-Pillar Category Reset Buttons -->
+          <div class="p-4 rounded-3xl bg-slate-50 dark:bg-oled border border-slate-200 dark:border-slate-800 space-y-2.5">
+            <span class="font-black text-xs uppercase tracking-wide text-[#D6B66B]">📁 Reset Individual Pillar Categories</span>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+              <button onclick="resetCategorySkills('deen')" class="p-2.5 rounded-2xl bg-white dark:bg-oledCard border border-slate-200 dark:border-slate-800 hover:border-rose-500/50 text-left transition">
+                <div class="font-black text-xs text-emerald-400">🕌 Deen &amp; Salah</div>
+                <div class="text-[10px] text-slate-400">Reset to 0%</div>
+              </button>
+              <button onclick="resetCategorySkills('develop')" class="p-2.5 rounded-2xl bg-white dark:bg-oledCard border border-slate-200 dark:border-slate-800 hover:border-rose-500/50 text-left transition">
+                <div class="font-black text-xs text-cyan-400">⚡ Personal Dev</div>
+                <div class="text-[10px] text-slate-400">Reset to 0%</div>
+              </button>
+              <button onclick="resetCategorySkills('grooming')" class="p-2.5 rounded-2xl bg-white dark:bg-oledCard border border-slate-200 dark:border-slate-800 hover:border-rose-500/50 text-left transition">
+                <div class="font-black text-xs text-amber-400">🗣️ Grooming Traits</div>
+                <div class="text-[10px] text-slate-400">Reset to 0%</div>
+              </button>
+              <button onclick="resetCategorySkills('ai_focus')" class="p-2.5 rounded-2xl bg-white dark:bg-oledCard border border-slate-200 dark:border-slate-800 hover:border-rose-500/50 text-left transition">
+                <div class="font-black text-xs text-indigo-400">🧠 AI Single-Skill</div>
+                <div class="text-[10px] text-slate-400">Reset to 0%</div>
+              </button>
+              <button onclick="resetCategorySkills('schedule')" class="p-2.5 rounded-2xl bg-white dark:bg-oledCard border border-slate-200 dark:border-slate-800 hover:border-rose-500/50 text-left transition">
+                <div class="font-black text-xs text-rose-400">⏱️ Time &amp; Study</div>
+                <div class="text-[10px] text-slate-400">Reset to 0%</div>
+              </button>
+              <button onclick="resetCategorySkills('overview')" class="p-2.5 rounded-2xl bg-white dark:bg-oledCard border border-slate-200 dark:border-slate-800 hover:border-rose-500/50 text-left transition">
+                <div class="font-black text-xs text-[#D6B66B]">📅 30D Heatmap</div>
+                <div class="text-[10px] text-slate-400">Reset Grid</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Manual Skill Percentage Calibration Controls -->
+          <div class="p-4 rounded-3xl bg-slate-50 dark:bg-oled border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-black text-xs uppercase tracking-wide text-amber-400">🎛️ Manual Trait &amp; Skill Level Calibration (%)</span>
+              <span class="text-[10px] text-slate-400">Directly set exact %</span>
+            </div>
+            <div class="space-y-2">
+              ${state.grooming.traits
+                .map(
+                  (tr) => `
+                <div class="p-2.5 rounded-2xl bg-white dark:bg-oledCard border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2 min-w-0 flex-1">
+                    <span>${tr.icon}</span>
+                    <span class="truncate font-bold text-xs">${tr.name}</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <input type="range" min="0" max="100" value="${tr.score}" oninput="manuallySetTraitScore('${tr.id}', this.value)" class="w-24 accent-amber-400 cursor-pointer" />
+                    <input type="number" min="0" max="100" value="${tr.score}" onchange="manuallySetTraitScore('${tr.id}', this.value)" class="w-14 px-1.5 py-1 text-center rounded-lg bg-slate-100 dark:bg-oled border border-slate-700 font-mono text-xs font-black text-amber-400" />
+                    <span class="text-xs font-black text-slate-400">%</span>
+                  </div>
+                </div>`
+                )
+                .join('')}
+            </div>
+          </div>
+
+          <!-- Factory Reset Option -->
+          <div class="pt-1 flex items-center justify-between text-slate-400 text-[11px] px-1">
+            <span>Need factory defaults?</span>
+            <button onclick="if(confirm('Restore original default template?')){ resetToFactoryDefaults(); }" class="px-3 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition">
+              Reset to Factory Setup
+            </button>
+          </div>
+        </div>`;
+    }
+
+    function resetAllSkillsToZero() {
+      ['deen', 'develop', 'grooming', 'ai_focus', 'schedule', 'overview'].forEach(resetCategorySkills);
+      showToast('All Skills & Categories Reset to 0% ✓', 'RESET');
     }
 
     function resetToFactoryDefaults() {
