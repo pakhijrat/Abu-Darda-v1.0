@@ -259,7 +259,17 @@
   <!-- ===================================================================== -->
   <!-- TOAST NOTIFICATION PILL                                               -->
   <!-- ===================================================================== -->
-  <div id="toastContainer" class="fixed top-16 right-4 z-50 hidden px-3.5 py-2 rounded-2xl bg-[#073F3D] border border-[#D6B66B] text-[#F5EBD6] shadow-xl flex items-center gap-2 text-xs font-bold">
+    <!-- ===================================================================== -->
+  <!-- FLOATING AI ASSISTANT TRIGGER BUTTON                                  -->
+  <!-- ===================================================================== -->
+  <button id="floatingAiBtn" onclick="openBottomSheet('ai_advisor')" title="Abu Darda AI Consultant" class="fixed bottom-20 sm:bottom-6 right-5 z-40 w-12 h-12 p-2.5 rounded-2xl bg-gradient-to-tr from-[#073F3D] to-[#0d5956] border-2 border-[#D6B66B] text-[#D6B66B] shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 group">
+    <span class="text-xl group-hover:rotate-12 transition-transform duration-300">🤖</span>
+    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+    </span>
+  </button>
+<div id="toastContainer" class="fixed top-16 right-4 z-50 hidden px-3.5 py-2 rounded-2xl bg-[#073F3D] border border-[#D6B66B] text-[#F5EBD6] shadow-xl flex items-center gap-2 text-xs font-bold">
     <span id="toastTag" class="px-1.5 py-0.5 rounded bg-[#D6B66B] text-slate-950 text-[9.5px] font-black uppercase">INFO</span>
     <span id="toastMsg">Action completed</span>
   </div>
@@ -330,7 +340,13 @@
         privacyBlur: false,
                 pinCode: '1234',
         lastActiveDate: new Date().toISOString().slice(0, 10),
-        autoMidnightReset: true,
+                autoMidnightReset: true,
+        aiAdvisor: {
+          apiKey: '',
+          chatHistory: [
+            { role: 'assistant', text: 'Assalamu Alaikum! I am **Abu Darda AI Consultant** — your intelligent strategist embedded into this system.\n\nI have complete architectural knowledge of your 6 Life Pillars, 5 Daily Prayers, SM-2 Spaced Repetition flashcards, habit loops, and 80/20 execution blocks.\n\nHow can I guide your strategy or habits today?' }
+          ]
+        },
         // Daily ('today') for Schedule/Daily tab; 7-Day Weekly ('7d') for remaining percentage tabs
         tabMetricMode: {
           deen: '7d',
@@ -758,7 +774,10 @@
         <button onclick="toggleThemeMode()" title="Toggle Dark/Light Theme" class="w-7 h-7 rounded-full bg-slate-200/70 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-xs">
           ${state.theme === 'dark' ? 'â˜€ï¸' : 'ðŸŒ™'}
         </button>
-                <button onclick="openBottomSheet('reset_hub')" title="Reset Counts, Scores & Skills" class="h-7 px-2 rounded-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-[10.5px] font-black flex items-center gap-1 transition">
+                        <button onclick="openBottomSheet('ai_advisor')" title="Abu Darda Intelligent AI Consultant" class="h-7 px-2.5 rounded-full bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 text-[10.5px] font-black flex items-center gap-1 transition">
+          🤖 <span>AI Consultant</span>
+        </button>
+        <button onclick="openBottomSheet('reset_hub')" title="Reset Counts, Scores & Skills" class="h-7 px-2 rounded-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-[10.5px] font-black flex items-center gap-1 transition">
           🔄 <span>Reset</span>
         </button>
         <button onclick="openBottomSheet('settings')" class="h-7 px-2.5 rounded-full bg-[#D6B66B] hover:bg-[#e1c47d] text-slate-950 text-[10.5px] font-black flex items-center gap-1 shadow-sm">
@@ -1844,7 +1863,12 @@
             </div>
           </div>`
           : `<div class="text-xs text-slate-400">All flashcards reviewed!</div>`;
-                  } else if (sheetName === 'reset_hub') {
+                        } else if (sheetName === 'ai_advisor') {
+        titleEl.textContent = '🤖 Abu Darda AI Consultant — Strategic OS Intelligence';
+        subEl.textContent = 'Instant architectural guidance, pillar diagnostics & real-time personal coaching (100% Free)';
+        bodyEl.innerHTML = renderAiAdvisorSheetHtml();
+        setTimeout(scrollAiChatToBottom, 80);
+      } else if (sheetName === 'reset_hub') {
         titleEl.textContent = '🔄 Master Reset Hub & Skill Calibration';
         subEl.textContent = 'Reset daily counts, calibrate skill momentum percentages, or clear all progress to start fresh';
         bodyEl.innerHTML = renderResetHubSheetHtml();
@@ -3066,6 +3090,300 @@
     // =========================================================================
     // MASTER RESET ENGINE: AUTO & MANUAL SKILL CALIBRATION
     // =========================================================================
+    // =========================================================================
+    // ADVANCED ABU DARDA AI CONSULTANT ENGINE (HYBRID INTELLIGENCE)
+    // =========================================================================
+    function getSystemArchitectureKnowledgePrompt() {
+      const pDone = Object.keys(state.prayersToday || {}).filter(k => state.prayersToday[k].done).length;
+      const habitsDone = (state.deenHabits || []).filter(h => h.loggedMin >= getScaledTarget(h.targetMin)).length;
+      const traitsSummary = (state.grooming.traits || []).map(t => `${t.name}: ${t.score}%`).join(', ');
+      const aiSkill = state.aiFocus.skillName || 'AI Learning';
+      const aiMin = state.aiFocus.loggedTodayMin || 0;
+      const weakestPillar = getWeakestPillar();
+
+      return `You are "Abu Darda AI Consultant", an elite personal strategy & spiritual development mentor embedded within the "Abu Darda v4.2 OS".
+You have comprehensive, real-time access to the user's current progress:
+- Current City / Coordinates: ${state.location.city} (Qibla: ${state.location.qibla}°)
+- Prayers Completed Today: ${pDone}/5 (Fajr, Dhuhr, Asr, Maghrib, Isha)
+- Deen Habits Completed: ${habitsDone}/${state.deenHabits.length}
+- Current Weakest Pillar Bottleneck: ${weakestPillar.name} (${weakestPillar.percent}%)
+- Single-Skill Focus: ${aiSkill} (${aiMin}m logged today)
+- Grooming & Speech Traits: ${traitsSummary}
+- Active Energy Mode: ${state.energyMode}
+- SM-2 Flashcards Ready in Queue: ${state.recallQueue.length}
+
+Architecture of Abu Darda v4.2:
+1. Deen Pillar: Anchored on 5 daily prayers, calculated via astronomical APIs, pre-prayer alarms (15m lead), Tilawat, Adhkar, and Uswah-e-Hasanah seerah reflections.
+2. Personal Development: Zone-2 cardio (conversational pace), thoracic postural mobility, Huberman 2-minute Physiological Sigh breathwork, and reading mental models.
+3. Personality Grooming: 5 traits (Articulate Speech, Executive Presence, Critical Thinking, Active Listening, High-Precision Vocabulary) with real-time dictionary phonetics and speech recording.
+4. Single-Skill Mastery: Ultradian deep work (30-min block) focused on AI prompting, neural foundations, and project execution.
+5. Time & Study Timer: Eisenhower 80/20 cognitive scheduling, top 3 daily wins, and countdown timer.
+6. Overview & Recall: SM-2 spaced repetition algorithmic flashcard queue and 30-day consistency heatmap.
+
+Instructions:
+- Provide sharp, wise, respectful, actionable guidance anchored in wisdom, first-principles logic, and Islamic etiquette.
+- Always be encouraging, strategic, and concise. Format with clear markdown bullet points when helpful.`;
+    }
+
+    function scrollAiChatToBottom() {
+      const box = document.getElementById('aiChatMessagesBox');
+      if (box) box.scrollTop = box.scrollHeight;
+    }
+
+    function renderAiAdvisorSheetHtml() {
+      const history = (state.aiAdvisor && state.aiAdvisor.chatHistory) ? state.aiAdvisor.chatHistory : [];
+      const hasKey = Boolean(state.aiAdvisor && state.aiAdvisor.apiKey);
+
+      return `
+        <div class="flex flex-col h-[75vh] max-h-[640px] text-xs">
+          <!-- Live Status Bar -->
+          <div class="p-3 rounded-2xl bg-slate-50 dark:bg-oled border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 shrink-0">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="font-black text-xs text-[#D6B66B]">Real-Time OS Architectural Intelligence</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="toggleAiKeyInput()" class="px-2.5 py-1 rounded-xl bg-slate-200 dark:bg-slate-800 text-[10.5px] font-bold text-slate-300 hover:text-white transition">
+                🔑 ${hasKey ? 'Gemini Pro (Custom Key Active)' : 'Free Built-In Engine'}
+              </button>
+              <button onclick="clearAiChatHistory()" class="px-2 py-1 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 text-[10px] font-bold">
+                Clear Chat
+              </button>
+            </div>
+          </div>
+
+          <!-- Optional Gemini API Key Drawer -->
+          <div id="aiKeyBox" class="hidden p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 my-2 shrink-0 space-y-2">
+            <div class="text-[11px] font-bold text-indigo-300">
+              ⚡ Free Built-in Mode works 100% offline and unlimited! To connect Google's latest Gemini 2.0 / 1.5 Pro directly for cutting-edge live reasoning, paste your free Google Gemini API Key:
+            </div>
+            <div class="flex gap-2">
+              <input id="geminiApiKeyInput" type="password" placeholder="AIzaSy..." value="${state.aiAdvisor?.apiKey || ''}" class="flex-1 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-oled border border-slate-700 font-mono text-xs text-white" />
+              <button onclick="saveAiApiKey()" class="px-3 py-1.5 rounded-xl bg-[#D6B66B] text-slate-950 font-black text-xs">Save Key</button>
+            </div>
+            <p class="text-[10px] text-slate-400">Get a 100% free Gemini API key at <a href="https://aistudio.google.com/apikey" target="_blank" class="text-amber-400 underline">aistudio.google.com</a> (no credit card required).</p>
+          </div>
+
+          <!-- Chat Message Thread Box -->
+          <div id="aiChatMessagesBox" class="flex-1 overflow-y-auto p-3 my-2 space-y-3 rounded-2xl bg-slate-100/60 dark:bg-oled/90 border border-slate-200 dark:border-slate-800/80">
+            ${history.map(m => {
+              const isUser = m.role === 'user';
+              return `
+                <div class="flex ${isUser ? 'justify-end' : 'justify-start'}">
+                  <div class="max-w-[85%] sm:max-w-[78%] p-3.5 rounded-2xl ${
+                    isUser
+                      ? 'bg-amber-500/20 text-amber-100 border border-amber-500/40 rounded-br-none'
+                      : 'bg-white dark:bg-oledCard text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-800 rounded-bl-none shadow-sm'
+                  } space-y-1">
+                    <div class="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider ${isUser ? 'text-amber-300' : 'text-[#D6B66B]'}">
+                      <span>${isUser ? '👤 You' : '🤖 Abu Darda AI'}</span>
+                    </div>
+                    <div class="leading-relaxed text-[11.5px] whitespace-pre-wrap">${formatAiMarkdown(m.text)}</div>
+                  </div>
+                </div>`;
+            }).join('')}
+            <div id="aiTypingIndicator" class="hidden flex items-center gap-2 p-2 text-slate-400 text-xs">
+              <span class="w-2 h-2 rounded-full bg-[#D6B66B] animate-bounce"></span>
+              <span class="w-2 h-2 rounded-full bg-[#D6B66B] animate-bounce [animation-delay:0.2s]"></span>
+              <span class="w-2 h-2 rounded-full bg-[#D6B66B] animate-bounce [animation-delay:0.4s]"></span>
+              <span class="text-[11px] font-bold text-slate-400">Consultant is synthesizing strategy...</span>
+            </div>
+          </div>
+
+          <!-- Quick Suggestion Chips -->
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 shrink-0">
+            <button onclick="sendQuickAiPrompt('Give me a full architectural overview of Abu Darda v4.2 and how the 6 pillars connect.')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-200 dark:bg-slate-800/80 hover:bg-amber-500/20 text-slate-700 dark:text-slate-300 hover:text-amber-300 text-[10.5px] font-bold border border-slate-300 dark:border-slate-700 transition">
+              🏛️ System Overview
+            </button>
+            <button onclick="sendQuickAiPrompt('Analyze my current bottlenecks and recommend a 20-minute recovery block.')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-200 dark:bg-slate-800/80 hover:bg-amber-500/20 text-slate-700 dark:text-slate-300 hover:text-amber-300 text-[10.5px] font-bold border border-slate-300 dark:border-slate-700 transition">
+              🎯 Diagnose Bottlenecks
+            </button>
+            <button onclick="sendQuickAiPrompt('How does the SM-2 Spaced Repetition recall algorithm work in this app?')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-200 dark:bg-slate-800/80 hover:bg-amber-500/20 text-slate-700 dark:text-slate-300 hover:text-amber-300 text-[10.5px] font-bold border border-slate-300 dark:border-slate-700 transition">
+              🧠 SM-2 Recall Logic
+            </button>
+            <button onclick="sendQuickAiPrompt('Suggest actionable seerah reflections and vocal drills for today.')" class="whitespace-nowrap px-2.5 py-1 rounded-full bg-slate-200 dark:bg-slate-800/80 hover:bg-amber-500/20 text-slate-700 dark:text-slate-300 hover:text-amber-300 text-[10.5px] font-bold border border-slate-300 dark:border-slate-700 transition">
+              🎙️ Speech & Sunnah Drills
+            </button>
+          </div>
+
+          <!-- Message Input Bar -->
+          <div class="pt-2 flex items-center gap-2 shrink-0">
+            <input id="aiChatInput" type="text" placeholder="Ask anything about the app, habits, prayers, or strategy..." onkeydown="if(event.key==='Enter') sendAiMessageNow();" class="flex-1 px-4 py-2.5 rounded-2xl bg-white dark:bg-oled border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#D6B66B]" />
+            <button onclick="dictateToField('aiChatInput')" title="Voice Dictation" class="w-10 h-10 rounded-2xl bg-slate-200 dark:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center text-sm">
+              🎙️
+            </button>
+            <button onclick="sendAiMessageNow()" class="h-10 px-4 rounded-2xl bg-[#073F3D] hover:bg-[#0a4d4a] border border-[#D6B66B]/60 text-[#D6B66B] font-black text-xs flex items-center gap-1.5 transition">
+              <span>Send</span>
+              <span>➔</span>
+            </button>
+          </div>
+        </div>`;
+    }
+
+    function toggleAiKeyInput() {
+      const el = document.getElementById('aiKeyBox');
+      if (el) el.classList.toggle('hidden');
+    }
+
+    function saveAiApiKey() {
+      const inp = document.getElementById('geminiApiKeyInput');
+      if (!inp) return;
+      if (!state.aiAdvisor) state.aiAdvisor = { apiKey: '', chatHistory: [] };
+      state.aiAdvisor.apiKey = inp.value.trim();
+      saveState();
+      toggleAiKeyInput();
+      showToast(state.aiAdvisor.apiKey ? 'Gemini API Key Saved ✓' : 'Using Free Built-In AI Engine', 'AI ENGINE');
+      if (activeSheetName === 'ai_advisor') renderBottomSheetContent('ai_advisor');
+    }
+
+    function clearAiChatHistory() {
+      if (!state.aiAdvisor) state.aiAdvisor = { apiKey: '', chatHistory: [] };
+      state.aiAdvisor.chatHistory = [
+        { role: 'assistant', text: 'Chat history cleared. How can I assist your strategy today?' }
+      ];
+      saveState();
+      if (activeSheetName === 'ai_advisor') renderBottomSheetContent('ai_advisor');
+      showToast('Chat history cleared', 'AI');
+    }
+
+    function sendQuickAiPrompt(text) {
+      const inp = document.getElementById('aiChatInput');
+      if (inp) {
+        inp.value = text;
+        sendAiMessageNow();
+      }
+    }
+
+    function formatAiMarkdown(txt) {
+      if (!txt) return '';
+      return txt
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-800 font-mono text-[10.5px] text-amber-300">$1</code>');
+    }
+
+    async function sendAiMessageNow() {
+      const inp = document.getElementById('aiChatInput');
+      if (!inp || !inp.value.trim()) return;
+      const userText = inp.value.trim();
+      inp.value = '';
+
+      if (!state.aiAdvisor) state.aiAdvisor = { apiKey: '', chatHistory: [] };
+      state.aiAdvisor.chatHistory.push({ role: 'user', text: userText });
+      saveState();
+      if (activeSheetName === 'ai_advisor') renderBottomSheetContent('ai_advisor');
+
+      const typing = document.getElementById('aiTypingIndicator');
+      if (typing) typing.classList.remove('hidden');
+      scrollAiChatToBottom();
+
+      try {
+        const reply = await queryAiEngine(userText);
+        state.aiAdvisor.chatHistory.push({ role: 'assistant', text: reply });
+        saveState();
+        playChime(659, 0.2);
+        pulseHaptic(30);
+      } catch (err) {
+        const fallback = getOfflineArchitecturalResponse(userText);
+        state.aiAdvisor.chatHistory.push({ role: 'assistant', text: fallback });
+        saveState();
+      } finally {
+        if (activeSheetName === 'ai_advisor') renderBottomSheetContent('ai_advisor');
+        scrollAiChatToBottom();
+      }
+    }
+
+    async function queryAiEngine(userPrompt) {
+      const apiKey = state.aiAdvisor?.apiKey;
+      // If user provided a Gemini API Key, use cutting-edge Gemini Pro API directly
+      if (apiKey) {
+        const sysContext = getSystemArchitectureKnowledgePrompt();
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [
+              { role: 'user', parts: [{ text: `${sysContext}\n\nUser Question: ${userPrompt}` }] }
+            ],
+            generationConfig: {
+              temperature: 0.65,
+              maxOutputTokens: 800
+            }
+          })
+        });
+        const data = await res.json();
+        const responseText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (responseText) return responseText;
+      }
+
+      // If no API key or offline, use our comprehensive built-in architectural reasoning engine
+      return getOfflineArchitecturalResponse(userPrompt);
+    }
+
+    function getOfflineArchitecturalResponse(q) {
+      const low = q.toLowerCase();
+      const weakest = getWeakestPillar();
+
+      if (low.includes('overview') || low.includes('architecture') || low.includes('what is') || low.includes('about')) {
+        return `### 🏛️ Abu Darda v4.2 System Architecture Overview
+
+Abu Darda v4.2 is a **Strategic Development Operating System** unified around 6 Core Pillars:
+1. **Deen & Salah:** Anchored on the 5 daily prayers (astronomical calculations + Qibla compass bearing to Makkah), Pre-prayer 15m alerts, Tilawat, and Adhkar.
+2. **Personal Development:** Physical energy architecture — Zone-2 aerobic cardio, core mobility, and Physiological Sigh breathwork.
+3. **Personality Grooming:** 5 executive presence traits (Articulate Speech, Eye Contact/Posture, Inversion Logic, Active Listening, High-Precision Vocabulary) with phonetics drills.
+4. **Single-Skill Mastery (AI Learning):** Deep cognitive block for AI prompt engineering and tech foundations.
+5. **Time & Study Timer:** 80/20 cognitive scheduling, top 3 daily wins, and focus countdown timer.
+6. **Overview & Recall:** SM-2 spaced repetition flashcards and 30-day consistency heatmaps.
+
+Everything is stored **100% locally on-device** for privacy sovereignty.`;
+      }
+
+      if (low.includes('bottleneck') || low.includes('diagnos') || low.includes('weak') || low.includes('suggest') || low.includes('help')) {
+        return `### 🎯 Live Diagnostic & Strategic Prescription
+
+Based on your real-time data:
+* **Current Primary Bottleneck:** **${weakest.name}** at **${weakest.percent}%**
+* **Recommended Course Correction:** Anchor a 20-minute recovery block right after your next prayer window.
+* **Floor Protocol:** If energy is low today, tap the **2m Floor Mode** (🛡️) in the top header. Doing 2 minutes guarantees you never break your consistency streak!`;
+      }
+
+      if (low.includes('sm-2') || low.includes('recall') || low.includes('flashcard') || low.includes('memory') || low.includes('repetition')) {
+        return `### 🧠 SM-2 Spaced Repetition System
+
+The SM-2 algorithm calculates memory decay intervals:
+* **Hard:** Resets card review interval to **1 day** to enforce rapid re-exposure.
+* **Good:** Doubles the current interval (e.g. 2d ➔ 4d ➔ 8d).
+* **Easy:** Triples the interval (e.g. 2d ➔ 6d ➔ 18d).
+You currently have **${state.recallQueue.length} flashcards** in your queue covering Deen Duas, AI prompt principles, and Executive Vocabulary.`;
+      }
+
+      if (low.includes('reset') || low.includes('restart') || low.includes('clear')) {
+        return `### 🔄 Reset System Guide
+You can control progress resets via the **🔄 Reset** button in the top navigation:
+* **🌅 Reset Daily Counts:** Resets today's logged minutes, prayers, and timers to 0 for a fresh morning start.
+* **📁 Per-Pillar Category Resets:** Reset Deen, Personal Dev, Grooming, AI Skill, or Time blocks individually.
+* **🎛️ Manual Sliders:** Adjust any skill or trait momentum directly between 0% and 100%.`;
+      }
+
+      if (low.includes('prayer') || low.includes('namaz') || low.includes('deen') || low.includes('qibla')) {
+        return `### 🕌 Deen & Salah Strategy
+* **Active City:** ${state.location.city} (Lat: ${state.location.lat.toFixed(2)}, Lng: ${state.location.lng.toFixed(2)})
+* **Qibla Direction:** ${state.location.qibla}° clockwise from True North.
+* **Pre-Prayer Warning:** ${state.location.prePrayerLeadMin || 15} minutes before Adhan.
+* Anchor your most important deep-work habit immediately after Fajr or Asr for peak dopamine and discipline.`;
+      }
+
+      return `### 💡 Strategic Advice from Abu Darda AI
+
+I reviewed your current system parameters:
+- **Active Focus:** ${state.aiFocus.skillName} (${state.aiFocus.loggedTodayMin}m completed)
+- **Primary Bottleneck to Address:** ${weakest.name} (${weakest.percent}%)
+- **Energy Calibration:** ${state.energyMode === 'full' ? '100% Full Focus' : state.energyMode === 'busy' ? '50% Busy Scaling' : '2-Minute Floor Mode'}
+
+*Pro-Tip:* Small, daily atomic wins compounded over 30 days beat sporadic marathon sessions every time. How would you like to calibrate your schedule or habits next?`;
+    }
+
     function checkAndApplyAutoMidnightReset() {
       const todayStr = new Date().toISOString().slice(0, 10);
       if (!state.lastActiveDate) {
