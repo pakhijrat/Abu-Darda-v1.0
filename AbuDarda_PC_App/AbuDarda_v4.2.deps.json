@@ -1,0 +1,54 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v11.0/win-x64",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v11.0": {},
+    ".NETCoreApp,Version=v11.0/win-x64": {
+      "AbuDarda_v4.2/1.0.0": {
+        "dependencies": {
+          "Microsoft.Web.WebView2.Core": "1.0.3719.77",
+          "Microsoft.Web.WebView2.WinForms": "1.0.3719.77"
+        },
+        "runtime": {
+          "AbuDarda_v4.2.dll": {}
+        }
+      },
+      "Microsoft.Web.WebView2.Core/1.0.3719.77": {
+        "runtime": {
+          "Microsoft.Web.WebView2.Core.dll": {
+            "assemblyVersion": "1.0.3719.77",
+            "fileVersion": "1.0.3719.77"
+          }
+        }
+      },
+      "Microsoft.Web.WebView2.WinForms/1.0.3719.77": {
+        "runtime": {
+          "Microsoft.Web.WebView2.WinForms.dll": {
+            "assemblyVersion": "1.0.3719.77",
+            "fileVersion": "1.0.3719.77"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AbuDarda_v4.2/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Web.WebView2.Core/1.0.3719.77": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Web.WebView2.WinForms/1.0.3719.77": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
