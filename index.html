@@ -114,7 +114,7 @@
       <div class="p-3.5 rounded-2xl bg-oled/80 border border-slate-800 space-y-2 text-xs text-slate-300 leading-relaxed">
         <p><strong class="text-emerald-400">1. Prayer-Anchored Rhythm:</strong> Your day aligns automatically with local Salah times and Qibla bearing for any city on Earth.</p>
         <p><strong class="text-brandGold">2. Anti-Fake-Progress Strategy:</strong> Combines 16-Line Mushaf Hifz, Speaking Speed Coaching, Breathing Resets, and 30/70 Single-Skill Mastery.</p>
-        <p><strong class="text-cyan-400">3. Live-Working Muse Concierge:</strong> Your pocket AI mentor guides every screen and works visibly in real time (<span class="text-emerald-400 font-bold">FREE</span> / <span class="text-amber-400 font-bold">BUSY</span>).</p>
+        <p><strong class="text-cyan-400">3. Live-Working Dost Concierge:</strong> Your pocket AI mentor guides every screen and works visibly in real time (<span class="text-emerald-400 font-bold">FREE</span> / <span class="text-amber-400 font-bold">BUSY</span>).</p>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
         <button onclick="completeWelcomeWizard('demo')" class="py-3 px-4 rounded-2xl bg-brandGold hover:bg-[#e1c47d] text-slate-950 text-xs font-black shadow-md">
@@ -278,7 +278,7 @@
       <div id="museFloatingAvatarMount" class="w-11 h-11 rounded-full bg-[#073F3D] border border-[#D6B66B]/50 flex items-center justify-center overflow-hidden shrink-0"></div>
       <div class="text-left leading-tight">
         <div class="flex items-center gap-1.5">
-          <span class="text-[11px] font-black text-slate-900 dark:text-[#F5EBD6]">ABU DARDA Muse</span>
+          <span class="text-[11px] font-black text-slate-900 dark:text-[#F5EBD6]">ABU DARDA Dost</span>
           <span id="museEmotionEmoji" class="text-xs">😊</span>
         </div>
         <div id="museLiveStatusPill" class="text-[10px] font-mono font-black text-emerald-500 dark:text-emerald-400">
@@ -316,7 +316,7 @@
           <div id="museDrawerAvatarMount" class="w-14 h-14 rounded-2xl bg-oled/70 border border-[#D6B66B]/60 flex items-center justify-center shrink-0"></div>
           <div class="min-w-0">
             <div class="flex items-center gap-1.5">
-              <span class="font-brand text-xs sm:text-sm font-extrabold text-[#D6B66B] truncate">ABU DARDA MUSE</span>
+              <span class="font-brand text-xs sm:text-sm font-extrabold text-[#D6B66B] truncate">ABU DARDA DOST</span>
               <span id="museDrawerEmotionBadge" class="px-2 py-0.5 rounded-full bg-oled/60 text-[10px] font-bold text-emerald-300">😊 Welcoming</span>
             </div>
             <div id="museDrawerStatusLine" class="text-[10.5px] font-mono font-bold text-emerald-300 truncate">
@@ -958,7 +958,7 @@
         id: 'm_init',
         sender: 'muse',
         emotion: 'welcoming',
-        text: 'As-salamu alaykum! I am your **ABU DARDA Muse**—your live-working Personal Strategy Consultant & Interactive App Guide. Assign me any task (e.g. *"Audit my 6 pillars"* or *"Build a study plan"*) and watch me work in real time, or tap **`? Guide Me Here`** if you ever want a walkthrough of any screen!',
+        text: 'As-salamu alaykum! I am your **ABU DARDA Dost**—your live-working Personal Strategy Consultant & Interactive App Guide. Assign me any task (e.g. *"Audit my 6 pillars"* or *"Build a study plan"*) and watch me work in real time, or tap **`? Guide Me Here`** if you ever want a walkthrough of any screen!',
         actions: [
           { label: '📊 Audit All 6 Pillars', fn: "sendMuseCommand('/audit')" },
           { label: '? Guide Me Here', fn: "sendMuseCommand('? Guide me through this screen')" }
@@ -1231,7 +1231,7 @@
     async function queryExternalMentorApi(userQuery) {
       // Local Privacy Scrubber: strips PIN, exact GPS coordinates, and personal notes before sending
       const scrubbedSummary = `ActiveTab=${state.activeTab}, Energy=${state.energyMode}, Deen7D=${getPillar7DayPercent('deen')}%, Dev7D=${getPillar7DayPercent('develop')}%, Grooming=${getPillar7DayPercent('grooming')}%, Skill=${state.aiFocus.skillName}(Stage ${state.aiFocus.activeStage}), DailyToday=${getPillarTodayPercent('schedule')}%`;
-      const sysPrompt = `You are ABU DARDA Muse, an executive Personal Strategy & Development Consultant. Be concise, wise, encouraging, and grounded in Saudi/Hanafi Deoband Islamic ethics and evidence-based science. User metrics: ${scrubbedSummary}.`;
+      const sysPrompt = `You are ABU DARDA Dost, an executive Personal Strategy & Development Consultant. Be concise, wise, encouraging, and grounded in Saudi/Hanafi Deoband Islamic ethics and evidence-based science. User metrics: ${scrubbedSummary}.`;
 
       if (state.aiApiConfig.provider === 'gemini') {
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(state.aiApiConfig.apiKey)}`, {
