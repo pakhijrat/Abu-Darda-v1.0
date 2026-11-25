@@ -1155,6 +1155,24 @@
       else closeMuseChatDrawer();
     }
 
+    let museVoiceEnabled = true;
+    function speakMuseReply(rawText) {
+      if (!museVoiceEnabled || !('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const clean = String(rawText || '')
+          .replace(/\*\*/g, '')
+          .replace(/[#>_]/g, '')
+          .replace(/[\u{1F300}-\u{1FAFF}]/gu, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+        if (!clean) return;
+        const utter = new SpeechSynthesisUtterance(clean.slice(0, 380));
+        utter.rate = 1.02;
+        utter.pitch = 1.0;
+        window.speechSynthesis.speak(utter);
+      } catch (e) {}
+    }
     async function sendMuseCommand(rawText) {
       const query = String(rawText || '').trim();
       if (!query || museBusy) return;
