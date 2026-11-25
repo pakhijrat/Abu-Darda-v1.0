@@ -4717,30 +4717,30 @@
       const offset = c - (p / 100) * c;
       return <svg width="36" height="36" viewBox="0 0 36 36" class="shrink-0 -rotate-90">
         <circle cx="18" cy="18" r="" fill="none" stroke="#1E293B" stroke-width="3.5"/>
-        <circle cx="18" cy="18" r="" fill="none" stroke="" stroke-width="3.5" stroke-dasharray="" stroke-dashoffset="" stroke-linecap="round"/>
-      </svg>;
+        <circle cx="18" cy="18" r="${r}" fill="none" stroke="${color}" stroke-width="3.5" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}" stroke-linecap="round"/>
+      </svg>`;
     }
 
     function showStreakInsight() {
       const d = getStreakDays();
       const hist = Array.isArray(state.niatHistory) ? state.niatHistory.length : 1;
-      showToast(🔥 -Day Streak Active! ( Niat entries logged), 'CONSISTENCY');
+      showToast(`🔥 ${d}-Day Streak Active! (${hist} Niat entries logged)`, 'CONSISTENCY');
     }
 
     function getNextUpFocusCardHtml() {
       const nextP = typeof getNextPrayerInfo === 'function' ? getNextPrayerInfo() : { name: 'Fajr', time: '05:20' };
       const overall = Math.round((getPillar7DayPercent('deen') + getPillar7DayPercent('develop') + getPillar7DayPercent('grooming') + getPillarTodayPercent('schedule')) / 4);
       const skill = state.aiFocus?.skillName || 'AI Learning';
-      return <div class="mt-2 pt-2 border-t border-slate-800/70 flex items-center justify-between gap-2 text-[11px]">
+      return `<div class="mt-2 pt-2 border-t border-slate-800/70 flex items-center justify-between gap-2 text-[11px]">
         <div class="flex items-center gap-2 min-w-0">
-          
+          ${getProgressRingSvg(overall, '#D6B66B')}
           <div class="min-w-0">
-            <div class="text-[10px] uppercase tracking-wider text-emerald-400 font-bold">Next Up • % Overall</div>
-            <div class="text-slate-200 font-semibold truncate">Anchor before  () • </div>
+            <div class="text-[10px] uppercase tracking-wider text-emerald-400 font-bold">Next Up • ${overall}% Overall</div>
+            <div class="text-slate-200 font-semibold truncate">Anchor before ${nextP.name} (${nextP.time}) • ${skill}</div>
           </div>
         </div>
         <button onclick="navigateAndHighlightTool('schedule', '')" class="px-2.5 py-1 rounded-xl bg-brandGold text-slate-950 font-black text-[10px] shrink-0">▶ Start</button>
-      </div>;
+      </div>`;
     }
 
     function getOfflinePrayerFallback() {
@@ -4750,7 +4750,7 @@
       const hist = Array.isArray(state.niatHistory) && state.niatHistory.length
         ? state.niatHistory
         : [{ date: new Date().toISOString().slice(0, 10), text: getDailyNiat() }];
-      const lines = hist.map((h, i) => ${i + 1}. [] ).join('\n');
+      const lines = hist.map((h, i) => `${i + 1}. [${h.date}] ${h.text}`).join('\n');
       alert('📖 7-Day Niat (Intention) Journal:\n\n' + lines);
     }
     function getDailyNiat() {
