@@ -113,7 +113,7 @@
       </div>
       <div class="p-3.5 rounded-2xl bg-oled/80 border border-slate-800 space-y-2 text-xs text-slate-300 leading-relaxed">
         <p><strong class="text-emerald-400">1. Prayer-Anchored Rhythm:</strong> Your day aligns automatically with local Salah times and Qibla bearing for any city on Earth.</p>
-        <p><strong class="text-brandGold">2. Anti-Fake-Progress Strategy:</strong> Combines 16-Line Mushaf Hifz, Live WPM Speech Coaching, Breathing Resets, and 30/70 Single-Skill Mastery.</p>
+        <p><strong class="text-brandGold">2. Anti-Fake-Progress Strategy:</strong> Combines 16-Line Mushaf Hifz, Speaking Speed Coaching, Breathing Resets, and 30/70 Single-Skill Mastery.</p>
         <p><strong class="text-cyan-400">3. Live-Working Muse Concierge:</strong> Your pocket AI mentor guides every screen and works visibly in real time (<span class="text-emerald-400 font-bold">FREE</span> / <span class="text-amber-400 font-bold">BUSY</span>).</p>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
@@ -873,7 +873,7 @@
             { id: 'b2', time: '09:00', title: 'AI Learning — 30m Single-Skill Deep Work', pillar: 'AI Focus', min: 30, alarm: true, done: !cleanSlate },
             { id: 'b3', time: '14:30', title: 'Articulate Speech & Vocabulary Phonetics Drill', pillar: 'Grooming', min: 15, alarm: true, done: false },
             { id: 'b4', time: '17:35', title: 'Post-Maghrib Zone-2 Brisk Walk & Breathing', pillar: 'Develop', min: 25, alarm: true, done: false },
-            { id: 'b5', time: '21:15', title: 'Night Muhasabah, SM-2 Recall & Next-Day Lock', pillar: 'Overview', min: 15, alarm: true, done: false }
+            { id: 'b5', time: '21:15', title: 'Night Muhasabah, Memory Flashcards & Next-Day Lock', pillar: 'Overview', min: 15, alarm: true, done: false }
           ]
         },
         recallQueue: [
@@ -1256,7 +1256,7 @@
             ]
           },
           grooming: {
-            text: `**🗺️ Live Walkthrough — Section 3: Personality Grooming & Speech**\n1. **Trait Momentum Bars:** Your lowest-scoring trait is highlighted at the top as your #1 bottleneck.\n2. **🎙️ Live WPM Speech Coach:** Tap **Live WPM Speech Coach** to speak into your mic and measure real-time speaking speed (**130–150 WPM target**) and filler words.\n3. **Vocabulary Studio:** Look up any word with live audio phonetics and push it straight to **SM-2 Flashcards**.`,
+            text: `**🗺️ Live Walkthrough — Section 3: Personality Grooming & Speech**\n1. **Trait Momentum Bars:** Your lowest-scoring trait is highlighted at the top as your #1 bottleneck.\n2. **🎙️ Speaking Speed Coach:** Tap **Speaking Speed Coach** to speak into your mic and measure real-time speaking speed (**130–150 WPM target**) and filler words.\n3. **Vocabulary Studio:** Look up any word with live audio phonetics and push it straight to **SM-2 Flashcards**.`,
             actions: [
               { label: '🎙️ Open Live WPM Coach', fn: "closeMuseChatDrawer();openBottomSheet('speech_dojo')" }
             ]
@@ -1332,7 +1332,7 @@
         };
         return {
           emotion: 'curious',
-          text: `**🎓 Bloom's 2-Sigma Socratic Check**\nBefore looking at your notes, explain this in your own words:\n\n> **Prompt:** *${card.front}*\n\nOnce you answer mentally, open your SM-2 Recall Deck to grade your retention!`,
+          text: `**🎓 Bloom's 2-Sigma Socratic Check**\nBefore looking at your notes, explain this in your own words:\n\n> **Prompt:** *${card.front}*\n\nOnce you answer mentally, open your Memory Flashcards Deck to grade your retention!`,
           actions: [
             { label: '🧠 Open SM-2 Flashcard Deck', fn: "closeMuseChatDrawer();openBottomSheet('recall')" }
           ]
@@ -2027,7 +2027,7 @@
             <div class="flex flex-wrap items-center justify-between gap-2">
               <span class="text-xs font-black uppercase tracking-wider text-amber-400">🗣️ Dynamic Trait Momentum Indicators (0–100%)</span>
               <div class="flex items-center gap-1.5">
-                <button onclick="openBottomSheet('speech_dojo')" class="px-2.5 py-1 rounded-xl bg-amber-500 text-slate-950 text-[10.5px] font-black">🎙️ Live WPM Speech Coach</button>
+                <button onclick="openBottomSheet('speech_dojo')" class="px-2.5 py-1 rounded-xl bg-amber-500 text-slate-950 text-[10.5px] font-black">🎙️ Speaking Speed Coach</button>
                 <button onclick="openSettingsForPillar('grooming')" class="px-2.5 py-1 rounded-xl bg-[#D6B66B]/15 text-[#D6B66B] border border-[#D6B66B]/40 text-[10.5px] font-black">+ Add / Edit ⚙️</button>
               </div>
             </div>
@@ -2154,7 +2154,7 @@
               <textarea id="aiProofInput" rows="2" placeholder="Describe what you actually built, solved, or coded today..." class="privacy-sensitive w-full px-3 py-2 rounded-xl bg-white dark:bg-oledCard border border-slate-700 text-xs">${escapeHtml(ai.proofOfWorkLog)}</textarea>
               <div class="flex gap-2">
                 <button onclick="saveAiProofOfWork(false)" class="flex-1 py-2 rounded-xl bg-indigo-600 text-white text-xs font-black">Save Proof of Work</button>
-                <button onclick="saveAiProofOfWork(true)" class="px-3 py-2 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-black">🧠 + Add to SM-2 Recall</button>
+                <button onclick="saveAiProofOfWork(true)" class="px-3 py-2 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-black">🧠 + Add to Memory Flashcards</button>
               </div>
             </div>
 
@@ -2224,7 +2224,7 @@
                 <button onclick="toggleStudyTimerPlayPause()" class="flex-1 py-2.5 rounded-2xl bg-[#D6B66B] text-slate-950 text-xs font-black">
                   ${sch.timerRunning ? '⏸ Pause Session' : '▶ Start Focus Timer'}
                 </button>
-                <button onclick="resetStudyTimer()" class="px-3.5 py-2.5 rounded-2xl bg-slate-800 text-slate-300 text-xs font-black">↺</button>
+                <button onclick="resetSectionProgress('schedule')" class="px-2.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-[10.5px] font-bold transition">↺ Reset Day</button><button onclick="resetStudyTimer()" class="px-3.5 py-2.5 rounded-2xl bg-slate-800 text-slate-300 text-xs font-black">↺</button>
               </div>
             </div>
 
@@ -3098,7 +3098,7 @@
 
     function renderCompleteSettingsSheetHtml() {
       const drawers = [
-        { id: 'pillars', icon: '🧩', label: '1. Pillars & Skills CRUD' },
+        { id: 'pillars', icon: '🧩', label: '1. Manage Skills & Habits' },
         { id: 'deen_cal', icon: '🕌', label: '2. Deen & Hijri Setup' },
         { id: 'schedule_cfg', icon: '⏱️', label: '3. Schedule & Seasons' },
         { id: 'security_backup', icon: '🛡️', label: '4. PIN, AI & Privacy' }
@@ -3649,7 +3649,7 @@
       }
       saveState();
       renderHeaderControls();
-      showToast(pushToRecall ? 'Proof saved & added to SM-2 Recall ✓' : 'Proof-of-Work saved ✓', 'AI FOCUS');
+      showToast(pushToRecall ? 'Proof saved & added to Memory Flashcards ✓' : 'Proof-of-Work saved ✓', 'AI FOCUS');
     }
 
     function graduateAndSwapSkill() {
@@ -4306,7 +4306,7 @@
       saveState();
       renderHeaderControls();
       renderActiveTab();
-      showToast(addCard ? 'Note saved & pushed to SM-2 Recall ✓' : 'Lesson note saved ✓', 'THEATER');
+      showToast(addCard ? 'Note saved & pushed to Memory Flashcards ✓' : 'Lesson note saved ✓', 'THEATER');
     }
 
     function toggleSpeechCoachMic() {
@@ -4381,7 +4381,7 @@
       });
       saveState();
       renderHeaderControls();
-      showToast(`Added "${d.title}" to SM-2 Recall ✓`, 'SM-2');
+      showToast(`Added "${d.title}" to Memory Flashcards ✓`, 'SM-2');
     }
 
     function addNewMasnoonDua() {
@@ -4526,6 +4526,55 @@
       showToast(mode === 'clean' ? 'Started fresh at 0% Clean Slate ✨' : 'Sample Strategy Dossier Loaded 🚀', 'WELCOME');
     }
 
+    
+    function resetSectionProgress(section) {
+      const labels = {
+        deen: 'Deen (Prayers, Quran & Adhkar)',
+        develop: 'Personal Development',
+        grooming: 'Personality Grooming',
+        ai: 'Single-Skill Mastery',
+        schedule: 'Time & Study Timer',
+        all: 'ALL Sections & Skills'
+      };
+      const label = labels[section] || section;
+      if (!confirm('Reset progress for ' + label + ' back to 0%?\n\nYour custom-added habits and settings will be kept.')) return;
+
+      const clean = defaultState(true);
+      if (section === 'deen' || section === 'all') {
+        if (state.prayers) Object.keys(state.prayers).forEach(k => { state.prayers[k].done = false; });
+        if (Array.isArray(state.deenHabits)) state.deenHabits.forEach(h => { h.doneToday = false; h.minutesDone = 0; });
+        if (Array.isArray(state.masnoonDuas)) state.masnoonDuas.forEach(d => { d.doneToday = false; });
+        if (Array.isArray(state.salah30Log)) state.salah30Log = clean.salah30Log;
+      }
+      if (section === 'develop' || section === 'all') {
+        if (Array.isArray(state.developHabits)) state.developHabits.forEach(h => { h.doneToday = false; h.minutesDone = 0; });
+        if (state.breathing) state.breathing.sessionsToday = 0;
+      }
+      if (section === 'grooming' || section === 'all') {
+        if (Array.isArray(state.groomingTraits)) state.groomingTraits.forEach(t => { t.score = 0; t.minutesToday = 0; });
+      }
+      if (section === 'ai' || section === 'all') {
+        if (state.aiFocus) {
+          state.aiFocus.activeStage = 1;
+          state.aiFocus.minutesToday = 0;
+          if (Array.isArray(state.aiFocus.stages)) state.aiFocus.stages.forEach(s => { s.done = false; s.progress = 0; });
+        }
+      }
+      if (section === 'schedule' || section === 'all') {
+        if (Array.isArray(state.schedule?.blocks)) state.schedule.blocks.forEach(b => { b.done = false; });
+        if (state.schedule) {
+          state.schedule.timerRunning = false;
+          state.schedule.secondsLeft = (state.schedule.presetMinutes || 25) * 60;
+        }
+      }
+
+      saveState();
+      renderHeaderControls();
+      renderNavigation();
+      renderAtAGlanceBanner();
+      renderActiveTab();
+      showToast(label + ' reset to 0% ↺', 'RESET');
+    }
     function applyThemeClass() {
       const root = document.documentElement;
       if (state.theme === 'dark') root.classList.add('dark');
