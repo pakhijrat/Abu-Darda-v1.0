@@ -4710,6 +4710,42 @@
     }
 
     
+    function getProgressRingSvg(pct, color = '#10B981') {
+      const p = Math.max(0, Math.min(100, Number(pct || 0)));
+      const r = 14;
+      const c = 2 * Math.PI * r;
+      const offset = c - (p / 100) * c;
+      return <svg width="36" height="36" viewBox="0 0 36 36" class="shrink-0 -rotate-90">
+        <circle cx="18" cy="18" r="" fill="none" stroke="#1E293B" stroke-width="3.5"/>
+        <circle cx="18" cy="18" r="" fill="none" stroke="" stroke-width="3.5" stroke-dasharray="" stroke-dashoffset="" stroke-linecap="round"/>
+      </svg>;
+    }
+
+    function showStreakInsight() {
+      const d = getStreakDays();
+      const hist = Array.isArray(state.niatHistory) ? state.niatHistory.length : 1;
+      showToast(🔥 -Day Streak Active! ( Niat entries logged), 'CONSISTENCY');
+    }
+
+    function getNextUpFocusCardHtml() {
+      const nextP = typeof getNextPrayerInfo === 'function' ? getNextPrayerInfo() : { name: 'Fajr', time: '05:20' };
+      const overall = Math.round((getPillar7DayPercent('deen') + getPillar7DayPercent('develop') + getPillar7DayPercent('grooming') + getPillarTodayPercent('schedule')) / 4);
+      const skill = state.aiFocus?.skillName || 'AI Learning';
+      return <div class="mt-2 pt-2 border-t border-slate-800/70 flex items-center justify-between gap-2 text-[11px]">
+        <div class="flex items-center gap-2 min-w-0">
+          
+          <div class="min-w-0">
+            <div class="text-[10px] uppercase tracking-wider text-emerald-400 font-bold">Next Up • % Overall</div>
+            <div class="text-slate-200 font-semibold truncate">Anchor before  () • </div>
+          </div>
+        </div>
+        <button onclick="navigateAndHighlightTool('schedule', '')" class="px-2.5 py-1 rounded-xl bg-brandGold text-slate-950 font-black text-[10px] shrink-0">▶ Start</button>
+      </div>;
+    }
+
+    function getOfflinePrayerFallback() {
+      return { fajr: '05:20', dhuhr: '11:56', asr: '15:29', maghrib: '17:06', isha: '18:31' };
+    }
     function getDailyNiat() {
       return state.dailyNiat || 'Seek knowledge with sincerity & anchor every block around Salah';
     }
@@ -4718,6 +4754,9 @@
       const next = prompt("Set Today's Intention (Niat):", curr);
       if (next !== null && next.trim()) {
         state.dailyNiat = next.trim().slice(0, 120);
+        if (!Array.isArray(state.niatHistory)) state.niatHistory = [];
+        state.niatHistory.unshift({ date: new Date().toISOString().slice(0, 10), text: state.dailyNiat });
+        state.niatHistory = state.niatHistory.slice(0, 7);
         saveState();
         renderAtAGlanceBanner();
         showToast('Today\'s Niat updated ✨', 'NIAT');
