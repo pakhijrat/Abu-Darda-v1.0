@@ -5129,6 +5129,44 @@
         showToast('Cloud Pull failed: ' + (e.message || 'Not found'), 'CLOUD');
       }
     }
+  
+    function sendOsNotification(title, body) {
+      if (!('Notification' in window)) return;
+      try {
+        if (Notification.permission === 'granted') {
+          new Notification(title, { body });
+        } else if (Notification.permission !== 'denied') {
+          Notification.requestPermission().then(p => {
+            if (p === 'granted') new Notification(title, { body });
+          });
+        }
+      } catch (e) {}
+    }
+
+    function exportWeeklyReport() {
+      const d7 = getPillar7DayPercent('deen');
+      const dev7 = getPillar7DayPercent('develop');
+      const g7 = getPillar7DayPercent('grooming');
+      const sToday = getPillarTodayPercent('schedule');
+      const pName = state.userProfile?.name || 'Strategist';
+      const hist = (state.niatHistory || []).map(h => `<li><b>${h.date}</b>: ${h.text}</li>`).join('') || `<li>${getDailyNiat()}</li>`;
+      const win = window.open('', '_blank', 'width=720,height=800');
+      if (!win) return window.print();
+      win.document.write(`<!DOCTYPE html><html><head><title>Abu Darda v1.2 — Weekly Strategy Report</title>
+        <style>body{font-family:sans-serif;padding:28px;color:#0f172a;line-height:1.6}h1{color:#073F3D;border-bottom:2px solid #D6B66B;padding-bottom:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.card{padding:12px;border:1px solid #cbd5e1;border-radius:10px}</style>
+        </head><body>
+        <h1>ABU DARDA v1.2 — Weekly Strategy &amp; Muhasabah Report</h1>
+        <p><b>User:</b> ${pName} | <b>Streak:</b> ${getStreakDays()} Days | <b>Date:</b> ${new Date().toLocaleDateString()}</p>
+        <div class="grid">
+          <div class="card"><b>Deen (7-Day):</b> ${d7}%</div>
+          <div class="card"><b>Personal Dev (7-Day):</b> ${dev7}%</div>
+          <div class="card"><b>Grooming (7-Day):</b> ${g7}%</div>
+          <div class="card"><b>Today's Schedule:</b> ${sToday}%</div>
+        </div>
+        <h3>7-Day Niat (Intention) Journal</h3><ul>${hist}</ul>
+        <script>window.onload=function(){window.print();}<\/script></body></html>`);
+      win.document.close();
+    }
   </script>
 
   <!-- ===================================================================== -->
