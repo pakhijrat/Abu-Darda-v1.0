@@ -324,7 +324,7 @@
             </div>
           </div>
         </div>
-        <button onclick="closeMuseChatDrawer()" class="w-8 h-8 rounded-xl bg-oled/60 text-slate-300 hover:text-white flex items-center justify-center text-xs font-black shrink-0">✕</button>
+        <button id="dostVoiceToggleBtn" onclick="toggleDostVoice()" title="Voice Output: ON (Tap to Mute)" class="w-8 h-8 rounded-full bg-oled/60 hover:bg-oled text-brandGold border border-brandGold/40 flex items-center justify-center text-xs mr-1.5">🔊</button><button onclick="closeMuseChatDrawer()" class="w-8 h-8 rounded-xl bg-oled/60 text-slate-300 hover:text-white flex items-center justify-center text-xs font-black shrink-0">✕</button>
       </div>
 
       <!-- 5 Specialized Mentor Mode Switcher -->
@@ -1197,6 +1197,63 @@
         utter.pitch = 1.0;
         window.speechSynthesis.speak(utter);
       } catch (e) {}
+    }
+    function toggleDostVoice() {
+      museVoiceEnabled = !museVoiceEnabled;
+      if (!museVoiceEnabled && 'speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+      const btn = document.getElementById('dostVoiceToggleBtn');
+      if (btn) {
+        btn.textContent = museVoiceEnabled ? '🔊' : '🔇';
+        btn.title = museVoiceEnabled ? 'Voice Output: ON (Tap to Mute)' : 'Voice Output: OFF (Tap to Unmute)';
+      }
+      showToast(museVoiceEnabled ? 'Dost Voice ON 🔊' : 'Dost Voice Muted 🔇', 'VOICE');
+    }
+
+    let dostMicActive = false;
+    let dostMicRec = null;
+    function toggleDostMic() {
+      const btn = document.getElementById('dostMicToggleBtn');
+      if (dostMicActive && dostMicRec) {
+        try { dostMicRec.stop(); } catch (e) {}
+        dostMicActive = false;
+        if (btn) {
+          btn.textContent = '🎙️';
+          btn.classList.remove('bg-rose-500/30', 'text-rose-300', 'border-rose-500/50');
+        }
+        showToast('Mic Switched Off', 'MIC');
+        return;
+      }
+      const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!Rec) {
+        showToast('Speech recognition not supported on this device', 'MIC');
+        return;
+      }
+      dostMicRec = new Rec();
+      dostMicRec.lang = 'en-US';
+      dostMicActive = true;
+      if (btn) {
+        btn.textContent = '🔴';
+        btn.classList.add('bg-rose-500/30', 'text-rose-300', 'border-rose-500/50');
+      }
+      showToast('Mic ON — Listening... 🎙️', 'MIC');
+      dostMicRec.onresult = (e) => {
+        const spoken = e.results?.[0]?.[0]?.transcript || '';
+        const inp = document.getElementById('museChatInput');
+        if (inp && spoken) {
+          inp.value = spoken;
+          sendMuseCommand(spoken);
+        }
+      };
+      dostMicRec.onend = () => {
+        dostMicActive = false;
+        if (btn) {
+          btn.textContent = '🎙️';
+          btn.classList.remove('bg-rose-500/30', 'text-rose-300', 'border-rose-500/50');
+        }
+      };
+      dostMicRec.start();
     }
     async function sendMuseCommand(rawText) {
       const query = String(rawText || '').trim();
