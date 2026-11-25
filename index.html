@@ -1366,7 +1366,7 @@
       }
 
       // 2. Zero-Key Free Live AI Endpoint with Privacy Scrubber & 8s Timeout
-      const scrubbed = `Tab=${state.activeTab}, Deen7D=${getPillar7DayPercent('deen')}%, Dev7D=${getPillar7DayPercent('develop')}%, Grooming=${getPillar7DayPercent('grooming')}%, Skill=${state.aiFocus?.skillName || 'AI Learning'}`;
+      const scrubbed = `Tab=${state.activeTab}, Deen7D=${getPillar7DayPercent('deen')}%, Dev7D=${getPillar7DayPercent('develop')}%, Grooming=${getPillar7DayPercent('grooming')}%, Skill=${escapeHtmlSafe(state.aiFocus?.skillName || 'AI Learning')}`;
       const prompt = `You are Abu Darda Dost, a motivating Personal Strategy & Islamic Productivity Mentor. User metrics: ${scrubbed}. Answer the user's question helpfully using relevant knowledge, keep them focused on their active skills without distractions, and end with 1 short motivating action tied to their Abu Darda goals: ${userQuery}`;
       const ctrl = new AbortController();
       const tid = setTimeout(() => ctrl.abort(), 8000);
@@ -5151,7 +5151,7 @@
       const sToday = getPillarTodayPercent('schedule');
       const overall = Math.round((d7 + dev7 + g7 + sToday) / 4);
       const rank = getRankInfo();
-      const pName = state.userProfile?.name || 'Strategist';
+      const pName = escapeHtmlSafe(state.userProfile?.name || 'Strategist');
       const msg = `*ABU DARDA v1.2 — Strategy Report*\n` +
         `👤 *Strategist:* ${pName} (${rank.rank} • ${rank.xp} XP)\n` +
         `🔥 *Streak:* ${getStreakDays()} Days | *Overall:* ${overall}%\n\n` +
@@ -5166,7 +5166,7 @@
       const sToday = getPillarTodayPercent('schedule');
       const overall = Math.round((d7 + dev7 + g7 + sToday) / 4);
       const rank = getRankInfo();
-      const pName = state.userProfile?.name || 'Strategist';
+      const pName = escapeHtmlSafe(state.userProfile?.name || 'Strategist');
       const ageGrp = state.userProfile?.ageGroup || 'General';
       const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
       const assessment = overall >= 80
@@ -5175,7 +5175,7 @@
         ? 'Good progress overall. Focus on your lowest-scoring pillar today to elevate your weekly average.'
         : 'Building foundational momentum. Start with one 25-minute Focus Block and your next Fard prayer.';
       const r = 34, c = 2 * Math.PI * r, off = c - (overall / 100) * c;
-      const hist = (state.niatHistory || []).map(h => `<li><b>${h.date}</b>: ${h.text}</li>`).join('') || `<li>${getDailyNiat()}</li>`;
+      const hist = (state.niatHistory || []).map(h => `<li><b>${escapeHtmlSafe(h.date)}</b>: ${escapeHtmlSafe(h.text)}</li>`).join('') || `<li>${getDailyNiat()}</li>`;
       const win = window.open('', '_blank', 'width=820,height=920');
       if (!win) return window.print();
       win.document.write(`<!DOCTYPE html><html><head><title>Abu Darda v1.2 — Evaluation Report</title>
@@ -5206,7 +5206,7 @@
               <div><div class="lbl">Strategist</div><div class="val">${pName}</div></div>
               <div><div class="lbl">AI Mentor</div><div class="val">Abu Darda Dost AI</div></div>
               <div><div class="lbl">Active Streak</div><div class="val">🔥 ${getStreakDays()} Days</div></div>
-              <div><div class="lbl">Active Skill</div><div class="val">${state.aiFocus?.skillName || 'AI Learning'}</div></div>
+              <div><div class="lbl">Active Skill</div><div class="val">${escapeHtmlSafe(state.aiFocus?.skillName || 'AI Learning')}</div></div>
             </div>
             <div class="scorebox">
               <svg width="84" height="84" viewBox="0 0 84 84" style="transform:rotate(-90deg)">
