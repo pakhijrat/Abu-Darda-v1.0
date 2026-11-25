@@ -5167,6 +5167,28 @@
         <script>window.onload=function(){window.print();}<\/script></body></html>`);
       win.document.close();
     }
+  
+    // =========================================================================
+    // ANDROID SYSTEM NOTIFICATION PERMISSION & BACKGROUND ALARM BRIDGE
+    // =========================================================================
+    function requestSystemNotificationPermission() {
+      try {
+        if (window.AndroidBridge && typeof window.AndroidBridge.requestNotificationPermission === 'function') {
+          window.AndroidBridge.requestNotificationPermission();
+        }
+        if ('Notification' in window && Notification.permission === 'default') {
+          Notification.requestPermission();
+        }
+      } catch (e) {}
+    }
+
+    function scheduleBackgroundAlert(title, body, triggerAtMs) {
+      try {
+        if (window.AndroidBridge && typeof window.AndroidBridge.scheduleAlarm === 'function') {
+          window.AndroidBridge.scheduleAlarm(String(title), String(body), Number(triggerAtMs || Date.now() + 60000));
+        }
+      } catch (e) {}
+    }
   </script>
 
   <!-- ===================================================================== -->
