@@ -4746,6 +4746,13 @@
     function getOfflinePrayerFallback() {
       return { fajr: '05:20', dhuhr: '11:56', asr: '15:29', maghrib: '17:06', isha: '18:31' };
     }
+    function viewNiatJournal() {
+      const hist = Array.isArray(state.niatHistory) && state.niatHistory.length
+        ? state.niatHistory
+        : [{ date: new Date().toISOString().slice(0, 10), text: getDailyNiat() }];
+      const lines = hist.map((h, i) => ${i + 1}. [] ).join('\n');
+      alert('📖 7-Day Niat (Intention) Journal:\n\n' + lines);
+    }
     function getDailyNiat() {
       return state.dailyNiat || 'Seek knowledge with sincerity & anchor every block around Salah';
     }
