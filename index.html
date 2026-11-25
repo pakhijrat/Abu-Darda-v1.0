@@ -5189,6 +5189,29 @@
         }
       } catch (e) {}
     }
+  
+    function syncAllPrayerAndTaskAlerts() {
+      try {
+        if (!state.prayers) return;
+        const now = new Date();
+        Object.keys(state.prayers).forEach(k => {
+          const p = state.prayers[k];
+          if (!p || !p.time) return;
+          const parts = String(p.time).split(':');
+          if (parts.length < 2) return;
+          const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(parts[0]), Number(parts[1]), 0);
+          const alertMs = target.getTime() - (15 * 60 * 1000);
+          if (alertMs > Date.now()) {
+            scheduleBackgroundAlert(`🕌 ${k.toUpperCase()} in 15m`, `Prepare for ${k} (${p.time}) • Anchor your Niat`, alertMs);
+          }
+        });
+      } catch (e) {}
+    }
+
+    function toggleWidgetGlanceMode() {
+      const nextP = typeof getNextPrayerInfo === 'function' ? getNextPrayerInfo() : { name: 'Fajr', time: '05:20' };
+      showToast(`📱 Glance: ${nextP.name} (${nextP.time}) • 🔥 ${getStreakDays()}d Streak • ${getDailyNiat().slice(0, 45)}`, 'WIDGET');
+    }
   </script>
 
   <!-- ===================================================================== -->
