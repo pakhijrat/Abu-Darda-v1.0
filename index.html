@@ -1207,6 +1207,29 @@
         }
       }
 
+      // Zero-Key Free Live AI Tier (for open-ended questions when online, with instant offline fallback)
+      const qLow = query.toLowerCase();
+      const isLocalCmd = qLow.startsWith('/') || qLow.includes('where am i') || qLow.includes('what is this app') || qLow.includes('what should i do') || qLow.includes('reset') || /^(hi|hello|hey|salam|assalam)/i.test(qLow);
+      if (!isLocalCmd && navigator.onLine) {
+        try {
+          const liveReply = await queryFreeLiveDostApi(query);
+          setMuseWorkingState(false, '', 'proud');
+          museMessages.push({
+            id: 'm_' + Date.now(),
+            sender: 'muse',
+            emotion: 'proud',
+            text: liveReply,
+            actions: [{ label: '📊 View Master Overview', fn: "navigateAndHighlightTool('overview', '')" }]
+          });
+          renderMuseChatFeed();
+          speakMuseReply(liveReply);
+          setTimeout(() => { if (!museBusy) { museEmotion = 'welcoming'; renderMuseAvatars(); } }, 2800);
+          return;
+        } catch (err) {
+          // Gracefully fall back to built-in offline engine
+        }
+      }
+
       // Built-In 0 MB Omniscient Strategy & App Concierge Engine
       setTimeout(() => {
         const responseObj = generateDeterministicMuseReply(query);
@@ -1228,6 +1251,54 @@
       }, 1250);
     }
 
+    function escapeHtmlSafe(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    async function queryFreeLiveDostApi(userQuery) {
+      const qLower = userQuery.toLowerCase().trim();
+      // 1. Live Dictionary Lookup ("define <word>")
+      const defMatch = qLower.match(/^define\s+([a-zA-Z-]+)$/);
+      if (defMatch) {
+        const word = defMatch[1];
+        const ctrl = new AbortController();
+        const tid = setTimeout(() => ctrl.abort(), 6000);
+        try {
+          const r = await fetch(https://api.dictionaryapi.dev/api/v2/entries/en/, { signal: ctrl.signal });
+          clearTimeout(tid);
+          if (r.ok) {
+            const data = await r.json();
+            const entry = data?.[0];
+            const meaning = entry?.meanings?.[0]?.definitions?.[0]?.definition;
+            if (meaning) {
+              return **** (): ;
+            }
+          }
+        } catch (e) { clearTimeout(tid); }
+      }
+
+      // 2. Zero-Key Free Live AI Endpoint with Privacy Scrubber & 8s Timeout
+      const scrubbed = Tab=, Deen7D=%, Dev7D=%, Grooming=%, Skill=;
+      const prompt = You are Abu Darda Dost, a concise, wise Personal Strategy & Islamic Productivity Assistant. User metrics: . Answer clearly in 2-4 sentences: ;
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 8000);
+      try {
+        const res = await fetch(https://text.pollinations.ai/, { signal: ctrl.signal });
+        clearTimeout(tid);
+        if (res.ok) {
+          const raw = (await res.text() || '').trim();
+          if (raw && raw.length > 8 && !raw.startsWith('<!DOCTYPE')) {
+            return escapeHtmlSafe(raw.slice(0, 900));
+          }
+        }
+      } catch (e) { clearTimeout(tid); }
+      throw new Error('Offline fallback');
+    }
     async function queryExternalMentorApi(userQuery) {
       // Local Privacy Scrubber: strips PIN, exact GPS coordinates, and personal notes before sending
       const scrubbedSummary = `ActiveTab=${state.activeTab}, Energy=${state.energyMode}, Deen7D=${getPillar7DayPercent('deen')}%, Dev7D=${getPillar7DayPercent('develop')}%, Grooming=${getPillar7DayPercent('grooming')}%, Skill=${state.aiFocus.skillName}(Stage ${state.aiFocus.activeStage}), DailyToday=${getPillarTodayPercent('schedule')}%`;
