@@ -5143,27 +5143,90 @@
       } catch (e) {}
     }
 
+
+    function shareToWhatsApp() {
+      const d7 = getPillar7DayPercent('deen');
+      const dev7 = getPillar7DayPercent('develop');
+      const g7 = getPillar7DayPercent('grooming');
+      const sToday = getPillarTodayPercent('schedule');
+      const overall = Math.round((d7 + dev7 + g7 + sToday) / 4);
+      const rank = getRankInfo();
+      const pName = state.userProfile?.name || 'Strategist';
+      const msg = `*ABU DARDA v1.2 — Strategy Report*\n` +
+        `👤 *Strategist:* ${pName} (${rank.rank} • ${rank.xp} XP)\n` +
+        `🔥 *Streak:* ${getStreakDays()} Days | *Overall:* ${overall}%\n\n` +
+        `• Deen (7D): ${d7}%\n• Personal Dev (7D): ${dev7}%\n• Grooming (7D): ${g7}%\n• Today's Schedule: ${sToday}%\n\n` +
+        `✨ *Today's Niat:* ${getDailyNiat()}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
     function exportWeeklyReport() {
       const d7 = getPillar7DayPercent('deen');
       const dev7 = getPillar7DayPercent('develop');
       const g7 = getPillar7DayPercent('grooming');
       const sToday = getPillarTodayPercent('schedule');
+      const overall = Math.round((d7 + dev7 + g7 + sToday) / 4);
+      const rank = getRankInfo();
       const pName = state.userProfile?.name || 'Strategist';
+      const ageGrp = state.userProfile?.ageGroup || 'General';
+      const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      const assessment = overall >= 80
+        ? 'Outstanding consistency across your pillars. Maintain this momentum and anchor every block around Salah.'
+        : overall >= 50
+        ? 'Good progress overall. Focus on your lowest-scoring pillar today to elevate your weekly average.'
+        : 'Building foundational momentum. Start with one 25-minute Focus Block and your next Fard prayer.';
+      const r = 34, c = 2 * Math.PI * r, off = c - (overall / 100) * c;
       const hist = (state.niatHistory || []).map(h => `<li><b>${h.date}</b>: ${h.text}</li>`).join('') || `<li>${getDailyNiat()}</li>`;
-      const win = window.open('', '_blank', 'width=720,height=800');
+      const win = window.open('', '_blank', 'width=820,height=920');
       if (!win) return window.print();
-      win.document.write(`<!DOCTYPE html><html><head><title>Abu Darda v1.2 — Weekly Strategy Report</title>
-        <style>body{font-family:sans-serif;padding:28px;color:#0f172a;line-height:1.6}h1{color:#073F3D;border-bottom:2px solid #D6B66B;padding-bottom:8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.card{padding:12px;border:1px solid #cbd5e1;border-radius:10px}</style>
-        </head><body>
-        <h1>ABU DARDA v1.2 — Weekly Strategy &amp; Muhasabah Report</h1>
-        <p><b>User:</b> ${pName} | <b>Streak:</b> ${getStreakDays()} Days | <b>Date:</b> ${new Date().toLocaleDateString()}</p>
-        <div class="grid">
-          <div class="card"><b>Deen (7-Day):</b> ${d7}%</div>
-          <div class="card"><b>Personal Dev (7-Day):</b> ${dev7}%</div>
-          <div class="card"><b>Grooming (7-Day):</b> ${g7}%</div>
-          <div class="card"><b>Today's Schedule:</b> ${sToday}%</div>
+      win.document.write(`<!DOCTYPE html><html><head><title>Abu Darda v1.2 — Evaluation Report</title>
+        <style>
+          body{font-family:'Inter',system-ui,sans-serif;background:#f8fafc;color:#0f172a;margin:0;padding:32px}
+          .sheet{max-width:720px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:36px;box-shadow:0 4px 24px rgba(15,23,42,0.06)}
+          .topbar{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:3px solid #10b981}
+          .brand{font-weight:900;font-size:20px;color:#073F3D;letter-spacing:0.06em}
+          .tag{font-size:11px;font-weight:800;letter-spacing:0.14em;color:#059669}
+          h1{font-size:26px;margin:22px 0 4px;color:#0f172a}
+          .sub{font-size:12.5px;color:#64748b;margin-bottom:24px}
+          .hero{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:24px}
+          .meta{display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;flex:1}
+          .lbl{font-size:10px;font-weight:800;letter-spacing:0.1em;color:#94a3b8;text-transform:uppercase}
+          .val{font-size:14px;font-weight:600;color:#0f172a;margin-top:2px}
+          .scorebox{width:170px;background:#f0fdf4;border:1px solid #dcfce7;border-radius:16px;padding:18px;text-align:center}
+          .assess{background:#f0fdf4;border-left:4px solid #10b981;border-radius:10px;padding:14px 18px;margin-bottom:22px}
+          .pillars{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+          .pcard{border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;font-size:13px}
+          .foot{display:flex;justify-content:space-between;font-size:11px;color:#64748b;border-top:1px solid #e2e8f0;padding-top:14px;margin-top:24px}
+        </style></head><body>
+        <div class="sheet">
+          <div class="topbar"><div class="brand">ABU DARDA <span style="color:#D6B66B">v1.2</span></div><div class="tag">EVALUATION REPORT</div></div>
+          <h1>Personal Strategy &amp; Productivity Report</h1>
+          <div class="sub">${ageGrp} • ${rank.rank} (${rank.xp} XP) • Generated ${dateStr}</div>
+          <div class="hero">
+            <div class="meta">
+              <div><div class="lbl">Strategist</div><div class="val">${pName}</div></div>
+              <div><div class="lbl">AI Mentor</div><div class="val">Abu Darda Dost AI</div></div>
+              <div><div class="lbl">Active Streak</div><div class="val">🔥 ${getStreakDays()} Days</div></div>
+              <div><div class="lbl">Active Skill</div><div class="val">${state.aiFocus?.skillName || 'AI Learning'}</div></div>
+            </div>
+            <div class="scorebox">
+              <svg width="84" height="84" viewBox="0 0 84 84" style="transform:rotate(-90deg)">
+                <circle cx="42" cy="42" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="7"/>
+                <circle cx="42" cy="42" r="${r}" fill="none" stroke="#2563eb" stroke-width="7" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" stroke-linecap="round"/>
+              </svg>
+              <div style="font-size:20px;font-weight:900;color:#1d4ed8;margin-top:4px">${overall}%</div>
+              <div style="font-size:10px;font-weight:800;color:#059669;letter-spacing:0.08em">OVERALL SCORE</div>
+            </div>
+          </div>
+          <div class="assess"><div class="lbl" style="color:#059669">Overall Assessment</div><div style="font-size:13.5px;margin-top:4px">${assessment}</div></div>
+          <div class="pillars">
+            <div class="pcard"><b>Deen (7-Day):</b> ${d7}%</div>
+            <div class="pcard"><b>Personal Dev (7-Day):</b> ${dev7}%</div>
+            <div class="pcard"><b>Grooming (7-Day):</b> ${g7}%</div>
+            <div class="pcard"><b>Today's Schedule:</b> ${sToday}%</div>
+          </div>
+          <div class="lbl">7-Day Niat (Intention) Journal</div><ul style="font-size:12.5px;padding-left:18px">${hist}</ul>
+          <div class="foot"><span>Generated by <b>Abu Darda Dost AI</b></span><span>${dateStr}</span></div>
         </div>
-        <h3>7-Day Niat (Intention) Journal</h3><ul>${hist}</ul>
         <script>window.onload=function(){window.print();}<\/script></body></html>`);
       win.document.close();
     }
