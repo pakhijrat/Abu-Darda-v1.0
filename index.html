@@ -5212,6 +5212,44 @@
       const nextP = typeof getNextPrayerInfo === 'function' ? getNextPrayerInfo() : { name: 'Fajr', time: '05:20' };
       showToast(`📱 Glance: ${nextP.name} (${nextP.time}) • 🔥 ${getStreakDays()}d Streak • ${getDailyNiat().slice(0, 45)}`, 'WIDGET');
     }
+  
+    // =========================================================================
+    // XP & RANK PROGRESSION, FSRS FLASHCARD RATING & FOCUS-TO-FLASHCARD LOOP
+    // =========================================================================
+    function getRankInfo() {
+      const xp = Number(state.xpPoints || 0);
+      let rank = 'Seeker';
+      if (xp >= 700) rank = 'Master';
+      else if (xp >= 300) rank = 'Strategist';
+      else if (xp >= 100) rank = 'Disciplined';
+      return { xp, rank };
+    }
+
+    function awardDostXp(amount, reason) {
+      state.xpPoints = Number(state.xpPoints || 0) + Number(amount || 10);
+      saveState();
+      renderAtAGlanceBanner();
+      const info = getRankInfo();
+      showToast(`+${amount} XP (${reason}) • ${info.rank} (${info.xp} XP)`, 'RANK');
+    }
+
+    function rateRecallFsrs(quality) {
+      const mult = { again: 1, hard: 2, good: 4, easy: 7 }[quality] || 2;
+      if (Array.isArray(state.recallQueue) && state.recallQueue.length > 0) {
+        const card = state.recallQueue.shift();
+        card.intervalDays = mult;
+        state.recallQueue.push(card);
+        awardDostXp(10, 'Memory Flashcard');
+      }
+    }
+
+    function promptFocusTakeaway() {
+      const note = prompt("Focus Session Complete! What is 1 key takeaway to save to Memory Flashcards?");
+      if (note && note.trim()) {
+        dostRealTimeCoach('flashcard', { front: 'Focus Session Takeaway', back: note.trim() });
+        awardDostXp(15, 'Focus Takeaway');
+      }
+    }
   </script>
 
   <!-- ===================================================================== -->
