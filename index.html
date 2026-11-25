@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>ABU DARDA v5.0 — Personal Strategy &amp; Development Consultant</title>
   <link id="dynamicFavicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23073F3D'/%3E%3Cpolygon points='54,18 22,50 40,50 54,36' fill='%23D6B66B'/%3E%3Cpolygon points='22,50 54,82 54,64 40,50' fill='%238C6825'/%3E%3Cpolygon points='54,18 76,32 76,68 54,82 54,64 62,59 62,41 54,36' fill='%23F3DC9F'/%3E%3C/svg%3E" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -5034,6 +5035,100 @@
       const m = document.getElementById('legalTermsModal');
       if (m) m.classList.add('hidden');
     }
+  
+    // =========================================================================
+    // PROFILE (NAME + AGE), AGE-ADAPTIVE COACHING & SUPABASE CLOUD SYNC
+    // =========================================================================
+    function getAgeGroupLabel(age) {
+      const a = Number(age || 0);
+      if (!a) return 'General';
+      if (a < 18) return 'Youth & Student';
+      if (a <= 30) return 'Young Professional';
+      return 'Executive & Mentor';
+    }
+    function openProfileSyncModal() {
+      const m = document.getElementById('profileSyncModal');
+      if (!m) return;
+      const p = state.userProfile || {};
+      const nEl = document.getElementById('profNameInp');
+      const aEl = document.getElementById('profAgeInp');
+      const eEl = document.getElementById('supaEmailInp');
+      const uEl = document.getElementById('supaUrlInp');
+      const kEl = document.getElementById('supaKeyInp');
+      if (nEl) nEl.value = p.name || '';
+      if (aEl) aEl.value = p.age || '';
+      if (eEl) eEl.value = p.email || '';
+      if (uEl) uEl.value = p.supaUrl || '';
+      if (kEl) kEl.value = p.supaKey || '';
+      m.classList.remove('hidden');
+    }
+    function closeProfileSyncModal() {
+      document.getElementById('profileSyncModal')?.classList.add('hidden');
+    }
+    function saveUserProfileLocal() {
+      const name = (document.getElementById('profNameInp')?.value || '').trim();
+      const age = Number(document.getElementById('profAgeInp')?.value || 0);
+      const email = (document.getElementById('supaEmailInp')?.value || '').trim();
+      const supaUrl = (document.getElementById('supaUrlInp')?.value || '').trim();
+      const supaKey = (document.getElementById('supaKeyInp')?.value || '').trim();
+      state.userProfile = { name, age, ageGroup: getAgeGroupLabel(age), email, supaUrl, supaKey };
+      saveState();
+      closeProfileSyncModal();
+      renderHeaderControls();
+      showToast(`Profile saved: ${name || 'User'} (${getAgeGroupLabel(age)}) ✓`, 'PROFILE');
+    }
+    function getSupabaseClient() {
+      const p = state.userProfile || {};
+      if (!p.supaUrl || !p.supaKey || !window.supabase) return null;
+      return window.supabase.createClient(p.supaUrl, p.supaKey);
+    }
+    async function signInWithSupabaseEmail() {
+      saveUserProfileLocal();
+      const sb = getSupabaseClient();
+      const email = state.userProfile?.email;
+      if (!sb || !email) return showToast('Enter Email, Supabase URL & Anon Key first', 'CLOUD');
+      try {
+        const { error } = await sb.auth.signInWithOtp({ email });
+        if (error) throw error;
+        showToast(`Magic Link sent to ${email} ✉️`, 'SUPABASE');
+      } catch (e) {
+        showToast('Auth error: ' + (e.message || 'Check keys'), 'CLOUD');
+      }
+    }
+    async function syncStateToSupabase() {
+      const sb = getSupabaseClient();
+      if (!sb) return showToast('Configure Supabase URL & Key in Profile first', 'CLOUD');
+      try {
+        const { data: userData } = await sb.auth.getUser();
+        const uid = userData?.user?.id || state.userProfile?.email || 'local_user';
+        const { error } = await sb.from('abudarda_backups').upsert({ id: uid, payload: state, updated_at: new Date().toISOString() });
+        if (error) throw error;
+        showToast('Progress synced to Supabase Cloud ☁️✓', 'CLOUD');
+      } catch (e) {
+        showToast('Cloud Push failed: ' + (e.message || 'Offline'), 'CLOUD');
+      }
+    }
+    async function pullStateFromSupabase() {
+      const sb = getSupabaseClient();
+      if (!sb) return showToast('Configure Supabase URL & Key in Profile first', 'CLOUD');
+      try {
+        const { data: userData } = await sb.auth.getUser();
+        const uid = userData?.user?.id || state.userProfile?.email || 'local_user';
+        const { data, error } = await sb.from('abudarda_backups').select('payload').eq('id', uid).single();
+        if (error) throw error;
+        if (data?.payload) {
+          state = data.payload;
+          saveState();
+          renderHeaderControls();
+          renderNavigation();
+          renderAtAGlanceBanner();
+          renderActiveTab();
+          showToast('Cloud backup restored ✓', 'CLOUD');
+        }
+      } catch (e) {
+        showToast('Cloud Pull failed: ' + (e.message || 'Not found'), 'CLOUD');
+      }
+    }
   </script>
 
   <!-- ===================================================================== -->
@@ -5086,6 +5181,47 @@
         <button onclick="closeLegalTermsModal()" class="py-2.5 px-6 rounded-2xl bg-brandGold hover:bg-[#e1c47d] text-slate-950 text-xs font-black transition">
           I Understand &amp; Agree
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- PROFILE (NAME + AGE) & SUPABASE CLOUD SYNC MODAL                      -->
+  <!-- ===================================================================== -->
+  <div id="profileSyncModal" class="fixed inset-0 z-50 hidden bg-oled/95 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="w-full max-w-md p-6 rounded-3xl bg-oledCard border border-brandGold/45 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <div>
+          <h3 class="font-brand text-sm font-extrabold text-brandGold">👤 PROFILE &amp; CLOUD SYNC</h3>
+          <p class="text-[11px] text-slate-400">Age-adaptive coaching + Supabase cross-device backup</p>
+        </div>
+        <button onclick="closeProfileSyncModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold flex items-center justify-center text-sm">✕</button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div class="grid grid-cols-3 gap-2">
+          <div class="col-span-2">
+            <label class="text-[10px] text-slate-400 font-bold uppercase">Your Name</label>
+            <input id="profNameInp" type="text" placeholder="e.g. Abdullah" class="w-full mt-1 px-3 py-2 rounded-xl bg-oled border border-slate-700 text-white text-xs outline-none focus:border-brandGold" />
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 font-bold uppercase">Age</label>
+            <input id="profAgeInp" type="number" min="7" max="110" placeholder="24" class="w-full mt-1 px-3 py-2 rounded-xl bg-oled border border-slate-700 text-white text-xs outline-none focus:border-brandGold" />
+          </div>
+        </div>
+        <button onclick="saveUserProfileLocal()" class="w-full py-2.5 rounded-xl bg-brandGold hover:bg-[#e1c47d] text-slate-950 font-black text-xs transition">Save Profile &amp; Adapt Coaching ✓</button>
+        <div class="pt-2 border-t border-slate-800 space-y-2">
+          <div class="text-[10px] text-emerald-400 font-bold uppercase">☁️ Supabase Cross-Device Sync (Optional)</div>
+          <input id="supaEmailInp" type="email" placeholder="Email for Magic Link Login (e.g. you@gmail.com)" class="w-full px-3 py-2 rounded-xl bg-oled border border-slate-700 text-white text-xs outline-none focus:border-emerald-500" />
+          <div class="grid grid-cols-2 gap-2">
+            <input id="supaUrlInp" type="text" placeholder="Supabase URL" class="px-2.5 py-1.5 rounded-xl bg-oled border border-slate-800 text-slate-300 text-[10px] outline-none" />
+            <input id="supaKeyInp" type="password" placeholder="Supabase Anon Key" class="px-2.5 py-1.5 rounded-xl bg-oled border border-slate-800 text-slate-300 text-[10px] outline-none" />
+          </div>
+          <div class="grid grid-cols-3 gap-1.5 pt-1">
+            <button onclick="signInWithSupabaseEmail()" class="py-2 rounded-xl bg-brandTeal border border-emerald-500/40 text-emerald-300 font-bold text-[10.5px]">✉️ Magic Link</button>
+            <button onclick="syncStateToSupabase()" class="py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-[10.5px]">⬆️ Push Cloud</button>
+            <button onclick="pullStateFromSupabase()" class="py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-[10.5px]">⬇️ Pull Cloud</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
