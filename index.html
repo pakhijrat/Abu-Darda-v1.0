@@ -1351,26 +1351,26 @@
         const ctrl = new AbortController();
         const tid = setTimeout(() => ctrl.abort(), 6000);
         try {
-          const r = await fetch(https://api.dictionaryapi.dev/api/v2/entries/en/, { signal: ctrl.signal });
+          const r = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`, { signal: ctrl.signal });
           clearTimeout(tid);
           if (r.ok) {
             const data = await r.json();
             const entry = data?.[0];
             const meaning = entry?.meanings?.[0]?.definitions?.[0]?.definition;
             if (meaning) {
-              return **** (): ;
+              return `**${escapeHtmlSafe(entry.word)}** (${escapeHtmlSafe(entry.meanings[0].partOfSpeech || 'word')}): ${escapeHtmlSafe(meaning)}`;
             }
           }
         } catch (e) { clearTimeout(tid); }
       }
 
       // 2. Zero-Key Free Live AI Endpoint with Privacy Scrubber & 8s Timeout
-      const scrubbed = Tab=, Deen7D=%, Dev7D=%, Grooming=%, Skill=;
-      const prompt = You are Abu Darda Dost, a concise, wise Personal Strategy & Islamic Productivity Assistant. User metrics: . Answer clearly in 2-4 sentences: ;
+      const scrubbed = `Tab=${state.activeTab}, Deen7D=${getPillar7DayPercent('deen')}%, Dev7D=${getPillar7DayPercent('develop')}%, Grooming=${getPillar7DayPercent('grooming')}%, Skill=${state.aiFocus?.skillName || 'AI Learning'}`;
+      const prompt = `You are Abu Darda Dost, a motivating Personal Strategy & Islamic Productivity Mentor. User metrics: ${scrubbed}. Answer the user's question helpfully using relevant knowledge, keep them focused on their active skills without distractions, and end with 1 short motivating action tied to their Abu Darda goals: ${userQuery}`;
       const ctrl = new AbortController();
       const tid = setTimeout(() => ctrl.abort(), 8000);
       try {
-        const res = await fetch(https://text.pollinations.ai/, { signal: ctrl.signal });
+        const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}`, { signal: ctrl.signal });
         clearTimeout(tid);
         if (res.ok) {
           const raw = (await res.text() || '').trim();
