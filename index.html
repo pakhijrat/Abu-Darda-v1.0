@@ -1155,6 +1155,31 @@
       else closeMuseChatDrawer();
     }
 
+    function dostRealTimeCoach(eventType, metric) {
+      if (eventType === 'wpm') {
+        const wpm = Number(metric || 0);
+        let msg = '';
+        if (wpm > 160) msg = You are speaking at  WPM—slow down slightly and pause between points (aim for 130–150 WPM).;
+        else if (wpm > 0 && wpm < 110) msg = You are at  WPM—project a bit more energy to hit the 130–150 WPM sweet spot.;
+        else if (wpm >= 110) msg = Excellent pacing at  WPM! Clear, executive, and composed.;
+        if (msg) {
+          showToast(msg, 'DOST COACH');
+          speakMuseReply(msg);
+        }
+      } else if (eventType === 'flashcard' && metric) {
+        if (!Array.isArray(state.recallQueue)) state.recallQueue = [];
+        state.recallQueue.unshift({
+          id: 'dost_fc_' + Date.now(),
+          category: 'Dost Coaching',
+          front: String(metric.front || 'Key Insight'),
+          back: String(metric.back || ''),
+          intervalDays: 1
+        });
+        saveState();
+        renderHeaderControls();
+        showToast('Added to Memory Flashcards ✓', 'DOST');
+      }
+    }
     let museVoiceEnabled = true;
     function speakMuseReply(rawText) {
       if (!museVoiceEnabled || !('speechSynthesis' in window)) return;
