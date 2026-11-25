@@ -1,0 +1,299 @@
+\documentclass[11pt, a4paper]{article}
+
+% --- UNIVERSAL PREAMBLE BLOCK ---
+\usepackage[a4paper, top=2.2cm, bottom=2.2cm, left=2cm, right=2cm]{geometry}
+\usepackage{fontspec}
+
+\usepackage[english, bidi=basic, provide=*]{babel}
+
+\babelprovide[import, onchar=ids fonts]{english}
+
+% Set default/Latin font to Sans Serif in the main (rm) slot
+\babelfont{rm}{Noto Sans}
+
+% --- SUPPORTING PACKAGES ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+% --- EXECUTIVE BRAND COLOR PALETTE ---
+\definecolor{brandteal}{HTML}{073F3D}
+\definecolor{brandgold}{HTML}{9E7B2F}
+\definecolor{softcream}{HTML}{F9F6EE}
+\definecolor{slateink}{HTML}{1E293B}
+\definecolor{mutedgray}{HTML}{475569}
+
+% --- TYPOGRAPHY & SPACING SETTINGS ---
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlist[itemize]{leftmargin=1.4em, itemsep=3pt, topsep=3pt}
+\setlist[enumerate]{leftmargin=1.6em, itemsep=4pt, topsep=4pt}
+
+% --- SECTION STYLING HELPERS ---
+\newcommand{\partbanner}[1]{%
+  \vspace{12pt}
+  \noindent\colorbox{brandteal}{%
+    \parbox{\dimexpr\textwidth-2\fboxsep\relax}{%
+      \vspace{4pt}
+      \hspace{4pt}\textbf{\large\color{white}#1}
+      \vspace{4pt}
+    }%
+  }
+  \vspace{6pt}
+}
+
+\newcommand{\subhead}[1]{%
+  \vspace{8pt}
+  \noindent{\large\textbf{\color{brandteal}#1}}
+  \vspace{2pt}
+  \hrule height 0.6pt
+  \vspace{4pt}
+}
+
+\begin{document}
+
+% =========================================================================
+% EXECUTIVE DOCUMENT HEADER
+% =========================================================================
+\begin{center}
+  {\color{brandgold}\rule{\textwidth}{1.5pt}}\\[6pt]
+  {\Huge\textbf{\color{brandteal}ABU DARDA (PSDC)}}\\[4pt]
+  {\large\textbf{\color{brandgold}MASTER BRAND NARRATIVE \& YOUTUBE CONTENT BLUEPRINT}}\\[4pt]
+  {\small\color{mutedgray}Personal Strategy \& Development Consultant $\bullet$ Dunya \& Akhirah Alignment OS}\\[4pt]
+  {\color{brandgold}\rule{\textwidth}{1.5pt}}
+\end{center}
+
+\vspace{4pt}
+
+\noindent\fcolorbox{brandgold}{softcream}{%
+  \parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}{%
+    \vspace{4pt}
+    \textbf{\color{brandteal}App Identity:} \textbf{ABU DARDA --- Personal Strategy \& Development Consultant (PSDC)}\\[3pt]
+    \textbf{\color{brandteal}Core Mission:} Rescuing people from drifting through life on trivial distractions by uniting worldly mastery (\textit{Dunya}) and eternal preparation (\textit{Akhirah}) inside one living, prayer-anchored operating system.\\[3pt]
+    \textbf{\color{brandteal}Audience Goal:} Build undeniable desire, urgency, and passion so viewers make \textbf{ABU DARDA} their non-negotiable daily companion wherever they go.
+    \vspace{4pt}
+  }%
+}
+
+% =========================================================================
+% PART 1: THE CORE BRAND NARRATIVE (MASTER STORY)
+% =========================================================================
+\partbanner{PART 1: The Core Brand Narrative (Master Story)}
+
+\subhead{1. The Hook \& Personal Origin (The Tragic Cost of a Distracted Life)}
+
+Look around today. Millions of intelligent, capable people are sleepwalking through the only life they will ever get. They wake up, reach straight for their phones, and burn hours scrolling through trivial noise---chasing algorithmic dopamine while their real purpose quietly slips through their fingers.
+
+Most productivity apps make this worse. They treat you like a robot---giving you cold, disconnected checklists, superficial streak counters, or generic advice that ignores who you truly are. You download five different apps: one for prayer times, one for fitness, one for notes, one for habits, and one for calendars. None of them talk to each other. Worse yet, none of them ask the most important question of all:
+
+\begin{center}
+  \fcolorbox{brandteal}{softcream}{%
+    \parbox{0.92\textwidth}{%
+      \vspace{4pt}
+      \centering
+      \textbf{\textit{\color{brandteal}``Are you just busy---or are you actually building a life that succeeds both in this world and in the Hereafter?''}}
+      \vspace{4pt}
+    }%
+  }
+\end{center}
+
+That frustration is why \textbf{ABU DARDA (Personal Strategy \& Development Consultant)} was born. Named after the noble Companion known for profound wisdom, worship, and balanced mastery of life, this app was created with a single uncompromising purpose: \textbf{to ensure that both our worldly life and our afterlife become the absolute best they can possibly be.}
+
+\subhead{2. The Turning Point (Building a Living Strategy OS in Gemini Canvas)}
+
+Instead of settling for another passive to-do list, I took this vision into \textbf{Gemini Canvas} and engineered something fundamentally different---not a passive tracker, but a \textbf{Personal Strategy \& Development Consultant} you carry in your pocket wherever you go.
+
+Turning a raw vision into a working system meant solving real human weaknesses head-on:
+\begin{itemize}
+  \item \textbf{The Scattered-Mind Trap:} People start 10 skills and finish zero. So we engineered a \textbf{Single-Skill Anti-Scatter Lock} with a strict \textbf{30/70 Execution Guard}---ensuring you spend at least 70\% of your time building real proof of work rather than passively watching tutorials.
+  \item \textbf{The Rigid-Schedule Trap:} Traditional calendars shatter the moment a meeting runs late or travel disrupts your day. So we anchored the entire timeline dynamically to your \textbf{5 Daily Fard Prayers} (\textit{Fajr, Dhuhr, Asr, Maghrib, Isha}) with a \textbf{1-Tap Cascade Shift} and \textbf{Energy Mode Scaling} (\texttt{100\% Full} $\rightarrow$ \texttt{50\% Busy} $\rightarrow$ \texttt{2-Minute Floor}) so you never break momentum---even on your hardest days.
+  \item \textbf{The ``Cold Software'' Trap:} People abandon tools that feel intimidating or lonely. So we crowned the app with a \textbf{3D Folded-Ribbon Sovereign Monogram} and built an \textbf{Emotional Live-Working ``Muse'' AI Mentor}---a companion you can literally see working in real time (\texttt{FREE} vs. \texttt{BUSY}) as he audits your 6 life pillars, guides you through any screen, and keeps you accountable with empathy instead of guilt.
+\end{itemize}
+
+\subhead{3. The Transformation (Before vs. After ABU DARDA)}
+
+\vspace{4pt}
+\begin{tabular}{p{0.19\textwidth} p{0.36\textwidth} p{0.37\textwidth}}
+  \toprule
+  \textbf{\color{brandteal}Dimension} & \textbf{\color{brandteal}Life BEFORE ABU DARDA} & \textbf{\color{brandteal}Life AFTER ABU DARDA} \\
+  \midrule
+  \textbf{Morning Wake-Up} & Grabbing the phone in bed, losing the golden post-Fajr hours to endless scrolling and brain fog. & Waking up to a live \textbf{Watch-Complication Header}, post-Fajr \textbf{16-Line Quran Hifz}, and your \#1 deep-work sprint protected by a \textbf{Barakah Shield}. \\
+  \midrule
+  \textbf{Sense of Purpose} & Drifting through trivial tasks with a nagging guilt that time---and life---are slipping away. & Every hour is intentionally invested across \textbf{6 unified pillars}---serving both excellence in \textit{Dunya} and lasting reward in \textit{Akhirah}. \\
+  \midrule
+  \textbf{Personal Growth} & Watching random self-help videos without ever improving speech, fitness, or career skills. & Measurable daily proof: \textbf{130--150 WPM live speech pacing}, \textbf{Zone-2 nasal walking \& breathing resets}, and \textbf{Stage 1--4 skill mastery}. \\
+  \midrule
+  \textbf{Busy or Travel Days} & One missed day triggers shame, broken streaks, and quitting for months. & One tap switches to \textbf{2-Minute Floor Mode}---protecting your identity, adapting to any city on Earth via live GPS, and keeping your streak alive. \\
+  \midrule
+  \textbf{Wherever You Go} & Carrying distractions in your pocket. & Carrying a \textbf{Personal Strategy Consultant, Quran Ustadh, Speech Coach, and Live-Working Muse} everywhere you step. \\
+  \bottomrule
+\end{tabular}
+
+% =========================================================================
+% PART 2: LONG-FORM YOUTUBE VIDEO STORY ARC (8–12 MINUTES)
+% =========================================================================
+\newpage
+\partbanner{PART 2: Long-Form YouTube Video Story Arc (8--12 Minutes)}
+
+\noindent\textbf{\color{brandteal}Working Title:} \textit{Stop Wasting Your One Life --- How I Built an AI Personal Strategy Coach for This World \& The Next}\\
+\textbf{\color{brandteal}Target Length:} 10 Minutes 30 Seconds\\
+\textbf{\color{brandteal}Pacing \& Tone:} Cinematic, deeply personal opening $\rightarrow$ honest builder transparency $\rightarrow$ fast-paced interactive demo $\rightarrow$ inspiring call to action.
+
+\subhead{Act 1: 0:00 -- 1:00 | The Hook (Pattern Interrupt + Existential Wake-Up)}
+\begin{itemize}
+  \item \textbf{Spoken Talking Points:}
+  \begin{itemize}
+    \item \textit{``Be honest with yourself for five seconds. If you look at the last 30 days of your life---how much of it went toward your true purpose, and how much of it disappeared into trivial, useless noise?''}
+    \item \textit{``Most people don't ruin their lives in one big disaster. They waste them one distracted hour at a time---until years pass and they realize they built neither true excellence in this world nor preparation for the next.''}
+    \item \textit{``So I built something I couldn't find anywhere on the internet: an AI-powered Personal Strategy and Development Consultant that lives in your pocket---and turns every single day into purposeful mastery.''}
+  \end{itemize}
+  \item \textbf{Exact Screen-Recording Cues:}
+  \begin{itemize}
+    \item \texttt{0:00--0:15}: Tight close-up on the \textbf{ABU DARDA 3D Folded-Ribbon Gold Monogram} and the single-row \textbf{56px Watch-Complication Header} ticking live (\textit{Live Clock $\bullet$ Hijri Date $\bullet$ City GPS $\bullet$ Qibla Compass}).
+    \item \texttt{0:15--0:45}: Fast-cut montage (0.8s per clip) showing the \textbf{16-Line Mushaf}, the \textbf{Circular Study Timer} counting down, the \textbf{Live WPM Speech Speedometer}, and the \textbf{Live-Working Muse Avatar} flipping from \texttt{FREE} to \texttt{BUSY}.
+  \end{itemize}
+\end{itemize}
+
+\subhead{Act 2: 1:00 -- 3:00 | The Problem (Why Generic Apps \& ``Motivation'' Fail)}
+\begin{itemize}
+  \item \textbf{Spoken Talking Points:}
+  \begin{itemize}
+    \item Expose the \textbf{App Fragmentation \& Illusion of Competence} traps: people download 5 separate apps, tick off fake checklists, watch hours of videos without applying anything, and let worldly busyness crowd out their prayers and character.
+    \item Explain the core philosophy: \textbf{Human beings are not two separate people.} Your spiritual discipline (\textit{Deen}), your physical energy (\textit{Health}), your voice and character (\textit{Personality}), and your career craft (\textit{Single-Skill Mastery}) are one single engine. When one collapses, everything else suffers.
+  \end{itemize}
+  \item \textbf{Exact Screen-Recording Cues:}
+  \begin{itemize}
+    \item \texttt{1:00--2:10}: Show the \textbf{6 Life Pillars Navigation Rail} (\textit{Deen, Develop, Grooming, AI Focus, Schedule, Overview}) with live \texttt{TODAY \%} and \texttt{7D \%} badges.
+    \item \texttt{2:10--3:00}: Click into \textbf{Overview} and point the cursor at the \textbf{5-Pillar Balance Bars} and \textbf{Bottleneck Detector}---showing how the app catches a weak pillar before it ruins your week.
+  \end{itemize}
+\end{itemize}
+
+\subhead{Act 3: 3:00 -- 6:00 | The Build Story (Turning Purpose into Software in Gemini Canvas)}
+\begin{itemize}
+  \item \textbf{Spoken Talking Points:}
+  \begin{itemize}
+    \item Share the behind-the-scenes story of building \textbf{ABU DARDA} inside \textbf{Gemini Canvas}.
+    \item Walk through the \textbf{3 design breakthroughs} that took it from an idea to a true consultant:
+    \begin{enumerate}
+      \item \textbf{Prayer-Anchored Time Architecture:} Instead of rigid hours that break when life happens, every task anchors around your 5 daily prayers---automatically adapting to any city or small town on Earth via live GPS.
+      \item \textbf{Anti-Fake-Progress Gates:} You cannot cheat the system. Whether it is Hifz word-level verification, the 30/70 Active Execution ratio, or the 15-second exit output gate after a timer finishes---the app demands real growth.
+      \item \textbf{The Live-Working Emotional ``Muse'':} Show how you designed an AI companion that does not just sit as a dead text box---when you give him a task, you watch him actively work on a miniature gold scroll in real time.
+    \end{enumerate}
+  \end{itemize}
+  \item \textbf{Exact Screen-Recording Cues:}
+  \begin{itemize}
+    \item \texttt{3:00--4:15}: Open the \textbf{Worldwide City \& Live GPS Bottom Sheet}, search a city, and watch the \textbf{Qibla Bearing (255.4$^\circ$)} and \textbf{Aladhan Prayer Timetable} update instantaneously.
+    \item \texttt{4:15--5:15}: Click the \texttt{100\% Focus} $\rightarrow$ \texttt{50\% Busy} $\rightarrow$ \texttt{2m Floor} energy pill in the top header and show every daily target across the app automatically recalibrate in real time.
+    \item \texttt{5:15--6:00}: Open the \textbf{Muse AI Mentor Drawer}, assign a task (\textit{``Audit my weakest pillar and schedule a recovery fix''}), and zoom in on the \textbf{Muse icon} switching from \texttt{FREE} to \texttt{BUSY} with his animated arms and gold scroll.
+  \end{itemize}
+\end{itemize}
+
+\subhead{Act 4: 6:00 -- 9:30 | Live App Walkthrough (A Complete Day Inside ABU DARDA)}
+\begin{itemize}
+  \item \textbf{Spoken Talking Points:}
+  \begin{itemize}
+    \item Take viewers on a high-energy, real-time walkthrough of how a user carries \textbf{ABU DARDA} everywhere from Fajr to Isha:
+    \item \textbf{Step 1 --- Spiritual Anchor (Deen):} Checking off Fard prayers with \texttt{-15m} pre-Adhan alerts, opening the \textbf{16-Line Indo-Pak Mushaf} with verified \textbf{Deoband Urdu \& Ma'arif-ul-Quran Tafsir}, and testing memory with \textbf{Hifz Mask}.
+    \item \textbf{Step 2 --- Body \& Mind Reset (Personal Dev):} Launching the \textbf{Guided Sensory Breathing Studio} (\textit{Physiological Sigh} with 528Hz harmonic audio) and logging a Zone-2 brisk walk.
+    \item \textbf{Step 3 --- Commanding Presence (Personality Grooming):} Opening the \textbf{Live WPM Speech Coach}, speaking into the mic to hit the \textbf{130--150 WPM leadership zone} with zero filler words, and looking up executive vocabulary with live audio phonetics.
+    \item \textbf{Step 4 --- Deep Career Mastery (Single-Skill Lock):} Starting a focused \textbf{30-minute AI Learning sprint} on the \textbf{Circular Wake-Lock Timer}, watching a vetted lecture inside the \textbf{In-App Study Theater}, and locking key insights straight into \textbf{SM-2 Spaced Repetition Flashcards}.
+  \end{itemize}
+  \item \textbf{Exact Screen-Recording Cues:}
+  \begin{itemize}
+    \item \texttt{6:00--7:00}: \textbf{Deen Tab} $\rightarrow$ Open \textbf{16-Line Quran \& Tafsir} sheet $\rightarrow$ toggle \textbf{Hifz Mask} $\rightarrow$ click \textbf{Play Qari}.
+    \item \texttt{7:00--7:45}: \textbf{Personal Dev Tab} $\rightarrow$ Open \textbf{Breath Pacer} $\rightarrow$ show expanding sensory orb (\texttt{INHALE DEEPLY} / \texttt{SLOW EXHALE}).
+    \item \texttt{7:45--8:35}: \textbf{Grooming Tab} $\rightarrow$ Open \textbf{Live WPM Speech Coach} $\rightarrow$ speak a 10-second live sentence and show real-time WPM and filler counter updating.
+    \item \texttt{8:35--9:30}: \textbf{AI Focus \& Schedule Tabs} $\rightarrow$ Click \textbf{Start Timer} $\rightarrow$ show the \textbf{Circular Gold Progress Ring} and \textbf{Floating Mini-Timer Pill} persisting across tabs $\rightarrow$ flip an \textbf{SM-2 Flashcard}.
+  \end{itemize}
+\end{itemize}
+
+\subhead{Act 5: 9:30 -- 10:30 | Vision \& Call to Action (Igniting Passion \& Daily Adoption)}
+\begin{itemize}
+  \item \textbf{Spoken Talking Points:}
+  \begin{itemize}
+    \item \textit{``Your time is your actual life. Every minute that passes is a piece of you that never comes back. You were not created to scroll endlessly and wonder where your years went---you were created for purpose, mastery, and success in both worlds.''}
+    \item \textit{``Wherever you go---whether you're at your desk, commuting, traveling to a new city, or standing before Fajr---keep ABU DARDA with you. Make it your daily mirror, your strategy consultant, and your shield against a wasted life.''}
+    \item \textbf{Clear CTA:} Try the interactive app link in the description, comment which of the 6 pillars you are locking in first, and subscribe to follow the next phase of the build.
+  \end{itemize}
+  \item \textbf{Exact Screen-Recording Cues:}
+  \begin{itemize}
+    \item \texttt{9:30--10:15}: Open \textbf{4-Drawer Modular Settings} briefly to show that users can customize every habit, skill, and time limit---and export their portable \textbf{Student Dossier}---without touching code.
+    \item \texttt{10:15--10:30}: Return to the \textbf{Master Overview} showing the \textbf{30-Day Consistency Heatmap} glowing emerald and gold, ending on the \textbf{ABU DARDA --- PLAN $\bullet$ GROW $\bullet$ ACHIEVE} emblem.
+  \end{itemize}
+\end{itemize}
+
+% =========================================================================
+% PART 3: 5 HIGH-RETENTION YOUTUBE SHORTS SCRIPTS (30–45 SECONDS EACH)
+% =========================================================================
+\newpage
+\partbanner{PART 3: 5 High-Retention YouTube Shorts Scripts (30--45 Seconds Each)}
+
+\subhead{Short 1: The Pain-Point Hook (Wasting Life on Trivial Things --- 38s)}
+\begin{itemize}
+  \item \textbf{On-Screen Text Hook (0:00--0:02):} \texttt{STOP WASTING YOUR ONE LIFE ON NOISE.}
+  \item \textbf{Spoken Script:} \textit{``Be honest---how many hours did you lose this week to trivial things that won't matter in five years, let alone in the Hereafter? Most people don't fail because they lack talent. They fail because they have no personal strategy. So I built \textbf{ABU DARDA}---an AI Personal Strategy Consultant in my pocket. It anchors my entire day around my 5 prayers, locks my focus onto one high-income skill at a time, coaches my speaking speed live, and keeps both my Dunya and Akhirah aligned---wherever I go. Stop drifting. Start building a life that actually counts.''}
+  \item \textbf{Visual / B-Roll Cue:} \texttt{0:00--0:04} Phone doom-scrolling $\rightarrow$ hard cut to \textbf{ABU DARDA} OLED dark-mode dashboard. \texttt{0:04--0:25} Rapid taps showing \textbf{5 Daily Prayers}, \textbf{Single-Skill 30m Sprint}, and \textbf{5-Pillar Balance Bars}. \texttt{0:25--0:38} Zoom into the \textbf{At-a-Glance Top Bar}.
+\end{itemize}
+
+\subhead{Short 2: The ``I Built This With AI'' Angle (Gemini Canvas Build Story --- 40s)}
+\begin{itemize}
+  \item \textbf{On-Screen Text Hook (0:00--0:02):} \texttt{I BUILT A PERSONAL STRATEGY OS IN GEMINI CANVAS.}
+  \item \textbf{Spoken Script:} \textit{``I got tired of using five different apps that never talked to each other---so I built my own Personal Strategy and Development Consultant inside Gemini Canvas. Watch what happens when I assign a task to the built-in AI Mentor: you literally see the Muse switch from FREE to BUSY, pull out a gold scroll, and audit all six areas of my life in real time. It calculates live Qibla and prayer times for any city on Earth, runs a 16-line Quran Hifz reader, tracks my speech WPM, and blocks fake productivity. All inside one zero-bloat app.''}
+  \item \textbf{Visual / B-Roll Cue:} \texttt{0:00--0:06} Split-screen showing \textbf{Gemini Canvas} compiling into \textbf{ABU DARDA}. \texttt{0:06--0:24} Close-up typing \textit{``Fix my weakest pillar''} to the \textbf{Muse AI Mentor} and watching him animate \texttt{BUSY} with his gold scroll. \texttt{0:24--0:40} Fast pan across the \textbf{3D Folded-Ribbon Logo}, \textbf{Worldwide GPS}, and \textbf{Circular Timer}.
+\end{itemize}
+
+\subhead{Short 3: The Live Demo / Transformation (Busy Day Rescue --- 35s)}
+\begin{itemize}
+  \item \textbf{On-Screen Text Hook (0:00--0:02):} \texttt{WHY YOUR HABIT STREAKS ALWAYS BREAK.}
+  \item \textbf{Spoken Script:} \textit{``Here is why 92\% of people quit their goals: the moment they have one exhausting or busy day, their rigid schedule collapses---and they give up. Watch how \textbf{ABU DARDA} solves this in one tap. Normally, I'm on 100\% Focus---30 minutes of AI learning, 25 minutes of Quran and walking. On a crazy travel day, I tap this energy pill once: 2-Minute Floor Mode. Instantly, every habit across my entire life scales down to a 2-minute non-negotiable minimum. Zero guilt. Never miss twice. Momentum protected anywhere.''}
+  \item \textbf{Visual / B-Roll Cue:} \texttt{0:00--0:10} Packed schedule on \textbf{Tab 5}. \texttt{0:10--0:26} Cursor taps header pill \texttt{100\% Focus} $\rightarrow$ \texttt{50\% Busy} $\rightarrow$ \texttt{2m Floor} as cards rescale live. \texttt{0:26--0:35} Show the \textbf{30-Day Consistency Heatmap} staying green.
+\end{itemize}
+
+\subhead{Short 4: The Contrarian Take (Why Self-Improvement Advice Fails --- 42s)}
+\begin{itemize}
+  \item \textbf{On-Screen Text Hook (0:00--0:02):} \texttt{MOST SELF-HELP IS A TRAP.}
+  \item \textbf{Spoken Script:} \textit{``Unpopular truth: watching productivity videos and checking off easy to-do lists is just procrastination in disguise. If your career is growing while your prayers and character are collapsing---you are losing. If your worship is strong while your mind, health, and speech are neglected---you are leaving massive potential unused. Real growth requires a unified strategy for both this life and the afterlife. That's why \textbf{ABU DARDA} enforces a 70\% active execution rule, measures your real speaking pace on a live mic, and anchors every ambition to your 5 daily prayers. Don't just look busy---become undeniable.''}
+  \item \textbf{Visual / B-Roll Cue:} \texttt{0:00--0:12} Close-up on \textbf{Single-Skill Proof-of-Work Log} and \textbf{30/70 Execution Ratio}. \texttt{0:12--0:30} Screen recording of \textbf{Live WPM Speech Coach} (\texttt{138 WPM $\bullet$ 0 Fillers}) and \textbf{16-Line Mushaf Hifz Mask}. \texttt{0:30--0:42} Pull back to \textbf{5-Pillar Balance Bars}.
+\end{itemize}
+
+\subhead{Short 5: The Founder Story (Dunya + Akhirah Companion Everywhere You Go --- 44s)}
+\begin{itemize}
+  \item \textbf{On-Screen Text Hook (0:00--0:02):} \texttt{THE ONE APP I CARRY EVERYWHERE I GO.}
+  \item \textbf{Spoken Script:} \textit{``When I looked at how easily people waste their lives on trivial distractions, I asked myself one question: What if the device in our pocket became the very tool that elevates both our worldly life and our afterlife? That single question became \textbf{ABU DARDA}. Wherever I go---whether I'm traveling to a new city, preparing for a high-stakes presentation, memorizing Quran after Fajr, or resetting my nervous system with guided breathing---this app is right there with me. One command center. Six life pillars. Zero wasted years. Try it once, and you'll never want to drift through a day without it.''}
+  \item \textbf{Visual / B-Roll Cue:} \texttt{0:00--0:10} Close-up of \textbf{ABU DARDA} emblem (\texttt{PLAN $\bullet$ GROW $\bullet$ ACHIEVE}). \texttt{0:10--0:32} Montage: \textbf{Live GPS City Switch} $\rightarrow$ \textbf{Guided Breathing Orb} $\rightarrow$ \textbf{SM-2 Flashcard Flip} $\rightarrow$ \textbf{Floating Mini-Timer}. \texttt{0:32--0:44} End on the \textbf{Live-Working Muse} smiling with his \textbf{Proud \& Celebratory} expression.
+\end{itemize}
+
+% =========================================================================
+% PART 4: STORY-DRIVEN HOOKS, TITLES & ANGLES BANK
+% =========================================================================
+\partbanner{PART 4: Story-Driven Hooks, Titles \& Angles Bank}
+
+\subhead{5 Curiosity-Driven YouTube Video Titles (Long-Form)}
+\begin{enumerate}
+  \item \textbf{Stop Wasting Your One Life: I Built an AI Personal Strategy Coach for This World \& The Next}
+  \item \textbf{Why I Replaced 5 Productivity Apps With One Prayer-Anchored Life OS (Built in Gemini Canvas)}
+  \item \textbf{The Anti-Distraction System: How One App Protects Your Deen, Health, Speech \& Career Every Day}
+  \item \textbf{I Built a ``Live-Working'' AI Mentor That Audits My Entire Life in Real Time (Full Walkthrough)}
+  \item \textbf{You Don't Have a Motivation Problem---You Have a Purpose \& Strategy Problem (Here's the Fix)}
+\end{enumerate}
+
+\subhead{5 Scroll-Stopping Opening Lines to Test Across Future Shorts}
+\begin{enumerate}
+  \item \textit{``Look at your phone's screen time right now---that's the exact price you're paying with your one life for things that won't matter in the grave.''}
+  \item \textit{``Most apps track your habits; I built an AI consultant that catches you when you're faking progress.''}
+  \item \textit{``What happens when you combine 16-line Quran Hifz, live speech coaching, and prayer-anchored time blocking into one single app?''}
+  \item \textit{``If your schedule breaks every time life gets busy, you don't have a system---you have a wish. Watch how a 2-Minute Floor fixes it.''}
+  \item \textit{``I gave my AI Mentor one job: make sure neither my worldly potential nor my afterlife gets wasted on trivial distractions.''}
+\end{enumerate}
+
+\vspace{10pt}
+\begin{center}
+  {\color{brandgold}\rule{\textwidth}{1pt}}\\[4pt]
+  {\footnotesize\color{mutedgray}\textbf{ABU DARDA (PSDC)} $\bullet$ Plan $\bullet$ Grow $\bullet$ Achieve $\bullet$ Brand Narrative \& YouTube Content Blueprint}
+\end{center}
+
+\end{document}
