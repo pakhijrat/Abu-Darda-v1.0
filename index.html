@@ -4710,6 +4710,24 @@
     }
 
     
+    function getDailyNiat() {
+      return state.dailyNiat || 'Seek knowledge with sincerity & anchor every block around Salah';
+    }
+    function editDailyNiat() {
+      const curr = getDailyNiat();
+      const next = prompt("Set Today's Intention (Niat):", curr);
+      if (next !== null && next.trim()) {
+        state.dailyNiat = next.trim().slice(0, 120);
+        saveState();
+        renderAtAGlanceBanner();
+        showToast('Today\'s Niat updated ✨', 'NIAT');
+      }
+    }
+    function getStreakDays() {
+      const donePrayers = state.prayers ? Object.values(state.prayers).filter(p => p.done).length : 0;
+      const base = state.streakDays || 1;
+      return donePrayers > 0 ? Math.max(base, 1) : base;
+    }
     function resetSectionProgress(section) {
       const labels = {
         deen: 'Deen (Prayers, Quran & Adhkar)',
